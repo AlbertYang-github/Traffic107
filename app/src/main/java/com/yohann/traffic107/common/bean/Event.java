@@ -10,7 +10,6 @@ import cn.bmob.v3.BmobObject;
  * Created by Yohann on 2016/8/25.
  */
 public class Event extends BmobObject {
-    private Marker marker;
     private String startLocation;
     private String endLocation;
     private Double startLongitude;
@@ -24,10 +23,7 @@ public class Event extends BmobObject {
     private Date endTime;
     private String username;
     private Boolean isFinished;
-
-    public void setMarker(Marker marker) {
-        this.marker = marker;
-    }
+    private boolean commitStatus;
 
     public void setStartLocation(String startLocation) {
         this.startLocation = startLocation;
@@ -81,8 +77,8 @@ public class Event extends BmobObject {
         isFinished = finished;
     }
 
-    public Marker getMarker() {
-        return marker;
+    public void setCommitStatus(boolean commitStatus) {
+        commitStatus = commitStatus;
     }
 
     public String getStartLocation() {
@@ -135,5 +131,9 @@ public class Event extends BmobObject {
 
     public Boolean getFinished() {
         return isFinished;
+    }
+
+    public boolean isCommitStatus() {
+        return commitStatus;
     }
 }

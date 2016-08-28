@@ -16,9 +16,9 @@ import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.yohann.traffic107.R;
+import com.yohann.traffic107.common.Constants.Variable;
 import com.yohann.traffic107.common.activity.BaseActivity;
 import com.yohann.traffic107.common.bean.Event;
-import com.yohann.traffic107.root.MapActivity;
 import com.yohann.traffic107.utils.BmobUtils;
 import com.yohann.traffic107.utils.StringUtils;
 import com.yohann.traffic107.utils.ViewUtils;
@@ -44,7 +44,7 @@ public class EditActivity extends BaseActivity {
     private TagGroup tagGroup;
     private TextView tvLabelHint;
     private TextView tvTime;
-    private Button btnFinish;
+    private Button btnCommit;
     private ArrayList<String> addressList;
     private ArrayList<String> labelList;
     private GeocodeSearch geocodeSearch;
@@ -60,7 +60,7 @@ public class EditActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit);
+        setContentView(R.layout.activity_edit_user);
         BmobUtils.init(this);
         init();
     }
@@ -75,7 +75,7 @@ public class EditActivity extends BaseActivity {
         tagGroup = (TagGroup) findViewById(R.id.label_group);
         tvLabelHint = (TextView) findViewById(R.id.tv_label_hint);
         tvTime = (TextView) findViewById(R.id.tv_time);
-        btnFinish = (Button) findViewById(R.id.btn_finish);
+        btnCommit = (Button) findViewById(R.id.btn_commit);
         etTitle = (EditText) findViewById(R.id.et_title);
         etDesc = (EditText) findViewById(R.id.et_desc);
 
@@ -103,7 +103,7 @@ public class EditActivity extends BaseActivity {
         //添加监听
         MyOnClickListener listener = new MyOnClickListener();
         ivAddLabels.setOnClickListener(listener);
-        btnFinish.setOnClickListener(listener);
+        btnCommit.setOnClickListener(listener);
         geocodeSearch.setOnGeocodeSearchListener(new AddressListener());
 
         //获取当前时间
@@ -187,7 +187,7 @@ public class EditActivity extends BaseActivity {
                     });
                     break;
 
-                case R.id.btn_finish:
+                case R.id.btn_commit:
                     String labels = StringUtils.getStringFromArrayList(labelList);
 
                     final Event event = new Event();
@@ -202,6 +202,8 @@ public class EditActivity extends BaseActivity {
                     event.setDesc(etDesc.getText().toString());
                     event.setStartTime(startDate);
                     event.setFinished(false);
+                    event.setUsername(Variable.userName);
+                    event.setCommitStatus(false);
 
                     //上传
                     new Thread() {
@@ -211,10 +213,10 @@ public class EditActivity extends BaseActivity {
                                 @Override
                                 public void done(String s, BmobException e) {
                                     if (e == null) {
-                                        ViewUtils.show(EditActivity.this, "上传成功");
+                                        ViewUtils.show(EditActivity.this, "提交成功");
                                         finish();
                                     } else {
-                                        ViewUtils.show(EditActivity.this, "上传失败" + e.getErrorCode());
+                                        ViewUtils.show(EditActivity.this, "提交失败" + e.getErrorCode());
                                     }
                                 }
                             });

@@ -56,8 +56,6 @@ public class EditActivity extends BaseActivity {
     private String endLoc;
     private Date startDate;
     private Event event;
-    private String startMarkerId;
-    private String endMarkerId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,8 +117,6 @@ public class EditActivity extends BaseActivity {
         startLatitude = bundle.getDouble("startLatitude");
         endLongitude = bundle.getDouble("endLongitude");
         endLatitude = bundle.getDouble("endLatitude");
-        startMarkerId = bundle.getString("startMarkerId");
-        endMarkerId = bundle.getString("endMarkerId");
 
         Log.i(TAG, "startLongitude" + startLongitude + "startLatitude" +
                 startLatitude + "endLongitude" + endLongitude + "endLatitude" + endLatitude);
@@ -205,6 +201,8 @@ public class EditActivity extends BaseActivity {
                     event.setDesc(etDesc.getText().toString());
                     event.setStartTime(startDate);
                     event.setFinished(false);
+                    event.setUsername("root");
+                    event.setCommitStatus(true);
 
                     //上传
                     new Thread() {
@@ -215,14 +213,7 @@ public class EditActivity extends BaseActivity {
                                 public void done(String s, BmobException e) {
                                     if (e == null) {
                                         ViewUtils.show(EditActivity.this, "上传成功");
-                                        Intent intent = new Intent();
-                                        Bundle bundle = new Bundle();
-                                        bundle.putDouble("startLongitude", startLongitude);
-                                        bundle.putDouble("startLatitude", startLatitude);
-                                        bundle.putDouble("endLongitude", endLongitude);
-                                        bundle.putDouble("endLatitude", endLatitude);
-                                        intent.putExtras(bundle);
-                                        setResult(RESULT_OK, intent);
+                                        setResult(RESULT_OK, null);
                                         finish();
                                     } else {
                                         ViewUtils.show(EditActivity.this, "上传失败" + e.getErrorCode());

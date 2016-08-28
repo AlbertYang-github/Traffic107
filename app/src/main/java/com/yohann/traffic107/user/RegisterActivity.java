@@ -66,6 +66,7 @@ public class RegisterActivity extends BaseActivity {
                         public void done(String s, BmobException e) {
                             if (e == null) {
                                 Variable.userId = user.getObjectId();
+                                Variable.userName = user.getUsername();
                                 ViewUtils.show(RegisterActivity.this, "注册成功 id=" + Variable.userId);
                                 startActivity(new Intent(RegisterActivity.this, MapActivity.class));
                                 finish();

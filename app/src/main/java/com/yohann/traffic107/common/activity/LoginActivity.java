@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -15,7 +14,6 @@ import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.Constants.Variable;
 import com.yohann.traffic107.common.bean.Root;
 import com.yohann.traffic107.common.bean.User;
-import com.yohann.traffic107.user.MapActivity;
 import com.yohann.traffic107.user.RegisterActivity;
 import com.yohann.traffic107.utils.BmobUtils;
 import com.yohann.traffic107.utils.ViewUtils;
@@ -42,8 +40,6 @@ public class LoginActivity extends BaseActivity {
     private Root root;
     private ProgressBar pb_user;
     private ProgressBar pb_root;
-
-    private String status = "user";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,27 +90,6 @@ public class LoginActivity extends BaseActivity {
         };
 
         vp.setAdapter(pagerAdapter);
-
-        vp.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                Log.i(TAG, "postion = " + position);
-                if (position == 0) {
-                    status = "user";
-                }
-                if (position == 1) {
-                    status = "root";
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
     }
 
     public void userLogin(View view) {
@@ -137,15 +112,21 @@ public class LoginActivity extends BaseActivity {
                         @Override
                         public void done(List<User> list, BmobException e) {
                             if (e == null) {
+                                boolean isSuccessful = false;
                                 for (User user : list) {
                                     if (username.equals(user.getUsername()) && password.equals(user.getPassword())) {
                                         //登录成功
                                         Variable.userId = user.getObjectId();
-                                        startActivity(new Intent(LoginActivity.this, MapActivity.class));
+                                        Variable.userName = user.getUsername();
+                                        startActivity(new Intent(LoginActivity.this, com.yohann.traffic107.user.MapActivity.class));
                                         finish();
                                         ViewUtils.show(LoginActivity.this, "登录成功");
+                                        isSuccessful = true;
                                         break;
                                     }
+                                }
+                                if (isSuccessful) {
+                                } else {
                                     ViewUtils.show(LoginActivity.this, "登录失败");
                                 }
                             } else {
@@ -190,6 +171,7 @@ public class LoginActivity extends BaseActivity {
                         @Override
                         public void done(List<Root> list, BmobException e) {
                             if (e == null) {
+                                boolean isSuccessful = false;
                                 for (Root root : list) {
                                     if (username.equals(root.getUsername()) && password.equals(root.getPassword())) {
                                         //登录成功
@@ -197,8 +179,12 @@ public class LoginActivity extends BaseActivity {
                                         startActivity(new Intent(LoginActivity.this, com.yohann.traffic107.root.MapActivity.class));
                                         finish();
                                         ViewUtils.show(LoginActivity.this, "登录成功");
+                                        isSuccessful = true;
                                         break;
                                     }
+                                }
+                                if (isSuccessful) {
+                                } else {
                                     ViewUtils.show(LoginActivity.this, "登录失败");
                                 }
                             } else {

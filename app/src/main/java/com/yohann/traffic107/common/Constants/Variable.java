@@ -10,7 +10,9 @@ import java.util.Map;
  */
 public class Variable {
     public static String userId;
+    public static String userName;
     public static String rootId;
+    public static String eventId;
 
     public static Map<String, Event> eventMap = new HashMap<>();
 }

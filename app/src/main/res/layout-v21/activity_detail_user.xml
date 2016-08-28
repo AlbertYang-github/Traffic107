@@ -35,37 +35,19 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/tv_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="5dp"
-                        android:text="时间"
-                        android:textColor="#000"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/tv_commit_status"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginTop="5dp"
-                        android:text="提交状态"
-                        android:textColor="#df2121"
-                        android:textSize="16sp" />
-
-                </RelativeLayout>
+                <TextView
+                    android:id="@+id/tv_time_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:text="时间"
+                    android:textColor="#000"
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -77,7 +59,7 @@
                         android:textSize="18sp" />
 
                     <TextView
-                        android:id="@+id/tv_start_Loc"
+                        android:id="@+id/tv_start_Loc_user"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="hello" />
@@ -98,7 +80,7 @@
                         android:textSize="18sp" />
 
                     <TextView
-                        android:id="@+id/tv_end_loc"
+                        android:id="@+id/tv_end_loc_user"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="hello" />
@@ -121,15 +103,8 @@
 
                 </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/tv_label_hint"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="hello" />
-
-
                 <me.gujun.android.taggroup.TagGroup
-                    android:id="@+id/label_group"
+                    android:id="@+id/label_group_user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:atg_textColor="#e22856"
@@ -146,7 +121,7 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/tv_title"
+                    android:id="@+id/tv_title_user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="hello" />
@@ -162,37 +137,10 @@
 
 
                 <TextView
-                    android:id="@+id/tv_desc"
+                    android:id="@+id/tv_desc_user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="hello" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginTop="20dp"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/btn_confirm"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_margin="10dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/btn_selector"
-                        android:text="应用" />
-
-                    <Button
-                        android:id="@+id/btn_cancel"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_margin="10dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/btn_selector"
-                        android:text="拒绝" />
-
-                </LinearLayout>
 
             </LinearLayout>
 

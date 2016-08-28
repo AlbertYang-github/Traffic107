@@ -5,5 +5,5 @@ package com.yohann.traffic107.common.Constants;
  */
 public class Constants {
     public static final int EDIT = 0;
-    public static final int WATHC = 1;
+    public static final int WATCH = 1;
 }

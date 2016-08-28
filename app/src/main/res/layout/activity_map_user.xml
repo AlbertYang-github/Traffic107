@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <com.amap.api.maps.MapView
-        android:id="@+id/map"
+        android:id="@+id/map_user"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></com.amap.api.maps.MapView>
 
@@ -24,7 +24,7 @@
     </RelativeLayout>
 
     <ImageView
-        android:id="@+id/iv_menu"
+        android:id="@+id/iv_menu_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
@@ -45,7 +45,7 @@
         android:visibility="invisible" />
 
     <RelativeLayout
-        android:id="@+id/rl_btn"
+        android:id="@+id/rl_btn_user"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#e6d189"
@@ -60,14 +60,14 @@
             android:src="@mipmap/back" />
 
         <RadioGroup
-            android:id="@+id/rg"
+            android:id="@+id/rg_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/rbtn_start"
+                android:id="@+id/rbtn_start_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
@@ -76,7 +76,7 @@
                 android:text="起始点" />
 
             <RadioButton
-                android:id="@+id/rbtn_end"
+                android:id="@+id/rbtn_end_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="终止点" />
@@ -84,7 +84,7 @@
         </RadioGroup>
 
         <TextView
-            android:id="@+id/tv_finish"
+            android:id="@+id/tv_finish_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
