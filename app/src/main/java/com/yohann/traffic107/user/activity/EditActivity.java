@@ -1,4 +1,4 @@
-package com.yohann.traffic107.user;
+package com.yohann.traffic107.user.activity;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -202,8 +202,8 @@ public class EditActivity extends BaseActivity {
                     event.setDesc(etDesc.getText().toString());
                     event.setStartTime(startDate);
                     event.setFinished(false);
+                    event.setCommStatus(false);
                     event.setUsername(Variable.userName);
-                    event.setCommitStatus(false);
 
                     //上传
                     new Thread() {
@@ -214,6 +214,8 @@ public class EditActivity extends BaseActivity {
                                 public void done(String s, BmobException e) {
                                     if (e == null) {
                                         ViewUtils.show(EditActivity.this, "提交成功");
+//                                        FragmentManager fragmentManager = getFragmentManager();
+//                                        fragmentManager.beginTransaction().replace(R.id.fl_content, new CommitFragment()).commit();
                                         finish();
                                     } else {
                                         ViewUtils.show(EditActivity.this, "提交失败" + e.getErrorCode());

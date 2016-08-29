@@ -201,8 +201,8 @@ public class EditActivity extends BaseActivity {
                     event.setDesc(etDesc.getText().toString());
                     event.setStartTime(startDate);
                     event.setFinished(false);
+                    event.setCommStatus(true);
                     event.setUsername("root");
-                    event.setCommitStatus(true);
 
                     //上传
                     new Thread() {

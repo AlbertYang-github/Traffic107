@@ -14,7 +14,8 @@ import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.Constants.Variable;
 import com.yohann.traffic107.common.bean.Root;
 import com.yohann.traffic107.common.bean.User;
-import com.yohann.traffic107.user.RegisterActivity;
+import com.yohann.traffic107.user.activity.HomeActivity;
+import com.yohann.traffic107.user.activity.RegisterActivity;
 import com.yohann.traffic107.utils.BmobUtils;
 import com.yohann.traffic107.utils.ViewUtils;
 
@@ -118,7 +119,7 @@ public class LoginActivity extends BaseActivity {
                                         //登录成功
                                         Variable.userId = user.getObjectId();
                                         Variable.userName = user.getUsername();
-                                        startActivity(new Intent(LoginActivity.this, com.yohann.traffic107.user.MapActivity.class));
+                                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                                         finish();
                                         ViewUtils.show(LoginActivity.this, "登录成功");
                                         isSuccessful = true;

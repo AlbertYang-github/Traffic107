@@ -13,6 +13,15 @@
         android:layout_height="55dp"
         android:background="#009688">
 
+        <ImageView
+            android:id="@+id/iv_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:clickable="true"
+            android:src="@mipmap/menu" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

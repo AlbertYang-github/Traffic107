@@ -13,6 +13,7 @@ import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.Constants.Variable;
 import com.yohann.traffic107.common.bean.Event;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -38,8 +39,45 @@ public class NetUtils {
         new Thread() {
             @Override
             public void run() {
+                Variable.eventMap.clear();
                 BmobQuery<Event> query = new BmobQuery<>();
                 query.addWhereEqualTo("isFinished", false);
+                List<BmobQuery<Event>> list = new ArrayList<>();
+                list.add(new BmobQuery<Event>().addWhereEqualTo("commStatus", true));
+                query.and(list);
+                query.findObjects(new FindListener<Event>() {
+                    @Override
+                    public void done(List<Event> list, BmobException e) {
+                        if (e == null) {
+                            if (list.size() == 0) {
+                                ViewUtils.show(context, "没有数据可加载");
+                            } else {
+                                for (Event event : list) {
+                                    Variable.eventMap.put(event.getObjectId(), event);
+                                }
+                                ViewUtils.show(context, "加载了" + Variable.eventMap.size() + "条数据");
+                                drawPath();
+                            }
+                        } else {
+                            ViewUtils.show(context, "数据加载失败 " + e.getErrorCode());
+                        }
+                    }
+                });
+            }
+        }.start();
+    }
+
+    public void loadUserMarker() {
+        //向服务器获取路况数据
+        new Thread() {
+            @Override
+            public void run() {
+                Variable.eventMap.clear();
+                BmobQuery<Event> query = new BmobQuery<>();
+                query.addWhereEqualTo("isFinished", false);
+                List<BmobQuery<Event>> list = new ArrayList<>();
+                list.add(new BmobQuery<Event>().addWhereEqualTo("username", Variable.userName));
+                query.and(list);
                 query.findObjects(new FindListener<Event>() {
                     @Override
                     public void done(List<Event> list, BmobException e) {

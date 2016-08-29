@@ -1,4 +1,4 @@
-package com.yohann.traffic107.user;
+package com.yohann.traffic107.user.activity;
 
 import android.content.Intent;
 import android.os.Bundle;

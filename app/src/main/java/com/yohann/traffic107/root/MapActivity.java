@@ -24,6 +24,7 @@ import com.yohann.traffic107.common.Constants.Variable;
 import com.yohann.traffic107.common.activity.BaseActivity;
 import com.yohann.traffic107.common.bean.Event;
 import com.yohann.traffic107.utils.BmobUtils;
+import com.yohann.traffic107.utils.LocationInit;
 import com.yohann.traffic107.utils.NetUtils;
 import com.yohann.traffic107.utils.ViewUtils;
 
@@ -60,6 +61,7 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
     private Marker startMarker;
     private Marker endMarker;
     private NetUtils netUtils;
+    private LocationInit locationInit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +130,8 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
         UiSettings uiSettings = aMap.getUiSettings();
         uiSettings.setZoomControlsEnabled(false);
         netUtils = new NetUtils(this, aMap);
+        locationInit = new LocationInit(this, aMap);
+        locationInit.init();
 
         //地图长按监听
         aMap.setOnMapLongClickListener(new AMap.OnMapLongClickListener() {

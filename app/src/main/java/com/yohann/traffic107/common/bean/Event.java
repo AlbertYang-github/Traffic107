@@ -1,7 +1,6 @@
 package com.yohann.traffic107.common.bean;
 
-import com.amap.api.maps.model.Marker;
-
+import java.io.Serializable;
 import java.util.Date;
 
 import cn.bmob.v3.BmobObject;
@@ -9,7 +8,7 @@ import cn.bmob.v3.BmobObject;
 /**
  * Created by Yohann on 2016/8/25.
  */
-public class Event extends BmobObject {
+public class Event extends BmobObject implements Serializable {
     private String startLocation;
     private String endLocation;
     private Double startLongitude;
@@ -23,7 +22,11 @@ public class Event extends BmobObject {
     private Date endTime;
     private String username;
     private Boolean isFinished;
-    private boolean commitStatus;
+    private Boolean commStatus;
+
+    public void setCommStatus(Boolean commStatus) {
+        this.commStatus = commStatus;
+    }
 
     public void setStartLocation(String startLocation) {
         this.startLocation = startLocation;
@@ -75,10 +78,6 @@ public class Event extends BmobObject {
 
     public void setFinished(Boolean finished) {
         isFinished = finished;
-    }
-
-    public void setCommitStatus(boolean commitStatus) {
-        commitStatus = commitStatus;
     }
 
     public String getStartLocation() {
@@ -133,7 +132,7 @@ public class Event extends BmobObject {
         return isFinished;
     }
 
-    public boolean isCommitStatus() {
-        return commitStatus;
+    public Boolean getCommStatus() {
+        return commStatus;
     }
 }

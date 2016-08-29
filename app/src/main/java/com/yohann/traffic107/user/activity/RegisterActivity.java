@@ -1,4 +1,4 @@
-package com.yohann.traffic107.user;
+package com.yohann.traffic107.user.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -68,7 +68,7 @@ public class RegisterActivity extends BaseActivity {
                                 Variable.userId = user.getObjectId();
                                 Variable.userName = user.getUsername();
                                 ViewUtils.show(RegisterActivity.this, "注册成功 id=" + Variable.userId);
-                                startActivity(new Intent(RegisterActivity.this, MapActivity.class));
+                                startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
                                 finish();
                             } else {
                                 ViewUtils.show(RegisterActivity.this, "注册失败 " + e.getErrorCode());
