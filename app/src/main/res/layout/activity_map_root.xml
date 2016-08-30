@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="路况"
+            android:text="首页路况"
             android:textColor="#fff"
             android:textSize="20sp" />
 
@@ -33,6 +33,7 @@
         android:src="@mipmap/plus" />
 
     <ImageView
+        android:id="@+id/iv_msg_reminder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
@@ -42,14 +43,14 @@
         android:visibility="invisible" />
 
     <ImageView
-        android:id="@+id/iv_menu"
+        android:id="@+id/iv_commit_msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_marginBottom="80dp"
         android:layout_marginRight="20dp"
         android:clickable="true"
-        android:src="@mipmap/menu" />
+        android:src="@mipmap/reminder" />
 
     <RelativeLayout
         android:id="@+id/rl_btn"

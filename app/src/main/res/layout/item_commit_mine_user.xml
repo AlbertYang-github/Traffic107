@@ -26,9 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/iv_image_commit"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="1dp"
-        android:layout_marginRight="150dp"
+        android:layout_alignLeft="@id/tv_title_commit"
         android:text="时间" />
 
     <TextView

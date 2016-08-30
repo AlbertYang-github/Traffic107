@@ -10,13 +10,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.yohann.traffic107.R;
+import com.yohann.traffic107.common.Constants.Variable;
 import com.yohann.traffic107.user.activity.HomeActivity;
 import com.yohann.traffic107.utils.BmobUtils;
+import com.yohann.traffic107.utils.ViewUtils;
+
+import cn.bmob.newim.BmobIM;
+import cn.bmob.newim.listener.ConnectListener;
+import cn.bmob.v3.exception.BmobException;
 
 /**
  * Created by Yohann on 2016/8/28.
  */
 public class AskFragment extends Fragment {
+    private static final String TAG = "AskFragmentInfo";
     private HomeActivity activity;
     private ImageView ivMenu;
 

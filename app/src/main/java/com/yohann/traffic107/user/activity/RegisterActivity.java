@@ -61,20 +61,37 @@ public class RegisterActivity extends BaseActivity {
             new Thread() {
                 @Override
                 public void run() {
-                    user.save(new SaveListener<String>() {
+
+                    user.save(RegisterActivity.this, new SaveListener() {
                         @Override
-                        public void done(String s, BmobException e) {
-                            if (e == null) {
-                                Variable.userId = user.getObjectId();
-                                Variable.userName = user.getUsername();
-                                ViewUtils.show(RegisterActivity.this, "注册成功 id=" + Variable.userId);
-                                startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
-                                finish();
-                            } else {
-                                ViewUtils.show(RegisterActivity.this, "注册失败 " + e.getErrorCode());
-                            }
+                        public void onSuccess() {
+                            Variable.userId = user.getObjectId();
+                            Variable.userName = user.getUsername();
+                            ViewUtils.show(RegisterActivity.this, "注册成功 id=" + Variable.userId);
+                            startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
+                            finish();
+                        }
+
+                        @Override
+                        public void onFailure(int i, String s) {
+                            ViewUtils.show(RegisterActivity.this, "注册失败 " + i);
                         }
                     });
+
+//                    user.save(new SaveListener<String>() {
+//                        @Override
+//                        public void done(String s, BmobException e) {
+//                            if (e == null) {
+//                                Variable.userId = user.getObjectId();
+//                                Variable.userName = user.getUsername();
+//                                ViewUtils.show(RegisterActivity.this, "注册成功 id=" + Variable.userId);
+//                                startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
+//                                finish();
+//                            } else {
+//                                ViewUtils.show(RegisterActivity.this, "注册失败 " + e.getErrorCode());
+//                            }
+//                        }
+//                    });
 
                     pb.post(new Runnable() {
                         @Override

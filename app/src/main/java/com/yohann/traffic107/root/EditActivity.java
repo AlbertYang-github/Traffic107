@@ -201,25 +201,40 @@ public class EditActivity extends BaseActivity {
                     event.setDesc(etDesc.getText().toString());
                     event.setStartTime(startDate);
                     event.setFinished(false);
-                    event.setCommStatus(true);
+                    event.setCommStatus("审核成功");
                     event.setUsername("root");
 
                     //上传
                     new Thread() {
                         @Override
                         public void run() {
-                            event.save(new SaveListener<String>() {
+
+                            event.save(EditActivity.this, new SaveListener() {
                                 @Override
-                                public void done(String s, BmobException e) {
-                                    if (e == null) {
-                                        ViewUtils.show(EditActivity.this, "上传成功");
-                                        setResult(RESULT_OK, null);
-                                        finish();
-                                    } else {
-                                        ViewUtils.show(EditActivity.this, "上传失败" + e.getErrorCode());
-                                    }
+                                public void onSuccess() {
+                                    ViewUtils.show(EditActivity.this, "上传成功");
+                                    setResult(RESULT_OK, null);
+                                    finish();
+                                }
+
+                                @Override
+                                public void onFailure(int i, String s) {
+                                    ViewUtils.show(EditActivity.this, "上传失败" + i);
                                 }
                             });
+
+//                            event.save(new SaveListener<String>() {
+//                                @Override
+//                                public void done(String s, BmobException e) {
+//                                    if (e == null) {
+//                                        ViewUtils.show(EditActivity.this, "上传成功");
+//                                        setResult(RESULT_OK, null);
+//                                        finish();
+//                                    } else {
+//                                        ViewUtils.show(EditActivity.this, "上传失败" + e.getErrorCode());
+//                                    }
+//                                }
+//                            });
                         }
                     }.start();
                     break;

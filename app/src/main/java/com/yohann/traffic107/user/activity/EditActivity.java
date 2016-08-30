@@ -202,26 +202,38 @@ public class EditActivity extends BaseActivity {
                     event.setDesc(etDesc.getText().toString());
                     event.setStartTime(startDate);
                     event.setFinished(false);
-                    event.setCommStatus(false);
+                    event.setCommStatus("审核中");
                     event.setUsername(Variable.userName);
 
                     //上传
                     new Thread() {
                         @Override
                         public void run() {
-                            event.save(new SaveListener<String>() {
+
+                            event.save(EditActivity.this, new SaveListener() {
                                 @Override
-                                public void done(String s, BmobException e) {
-                                    if (e == null) {
-                                        ViewUtils.show(EditActivity.this, "提交成功");
-//                                        FragmentManager fragmentManager = getFragmentManager();
-//                                        fragmentManager.beginTransaction().replace(R.id.fl_content, new CommitFragment()).commit();
-                                        finish();
-                                    } else {
-                                        ViewUtils.show(EditActivity.this, "提交失败" + e.getErrorCode());
-                                    }
+                                public void onSuccess() {
+                                    ViewUtils.show(EditActivity.this, "提交成功");
+                                    finish();
+                                }
+
+                                @Override
+                                public void onFailure(int i, String s) {
+                                    ViewUtils.show(EditActivity.this, "提交失败" + i);
                                 }
                             });
+
+//                            event.save(new SaveListener<String>() {
+//                                @Override
+//                                public void done(String s, BmobException e) {
+//                                    if (e == null) {
+//                                        ViewUtils.show(EditActivity.this, "提交成功");
+//                                        finish();
+//                                    } else {
+//                                        ViewUtils.show(EditActivity.this, "提交失败" + e.getErrorCode());
+//                                    }
+//                                }
+//                            });
                         }
                     }.start();
                     break;

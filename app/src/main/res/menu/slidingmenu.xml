@@ -2,21 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/home"
-        android:icon="@mipmap/home"
         android:title="路况首页" />
 
     <item
         android:id="@+id/add"
-        android:icon="@mipmap/add_sliding"
         android:title="添加路况" />
 
     <item
         android:id="@+id/ask"
-        android:icon="@mipmap/reminder"
         android:title="询问附近" />
 
     <item
         android:id="@+id/statistics"
-        android:icon="@mipmap/reminder"
         android:title="数据统计" />
 </menu>

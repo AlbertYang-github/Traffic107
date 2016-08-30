@@ -44,9 +44,10 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
     private RadioButton rbtnEnd;
     private TextView tvFinish;
     private RelativeLayout rlBtn;
-    private ImageView ivMenu;
+    private ImageView ivCommitMsg;
     private Animation animOpen;
     private AMap aMap;
+    private ImageView ivReminder;
 
     private String editflag;
     private boolean btnStatus;
@@ -115,7 +116,8 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
         rbtnEnd = (RadioButton) findViewById(R.id.rbtn_end);
         tvFinish = (TextView) findViewById(R.id.tv_finish);
         rlBtn = (RelativeLayout) findViewById(R.id.rl_btn);
-        ivMenu = (ImageView) findViewById(R.id.iv_menu);
+        ivCommitMsg = (ImageView) findViewById(R.id.iv_commit_msg);
+        ivReminder = (ImageView) findViewById(R.id.iv_msg_reminder);
         aMap = mapView.getMap();
         animOpen = AnimationUtils.loadAnimation(this, R.anim.plus_open_anim);
 
@@ -124,7 +126,7 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
         rbtnStart.setOnClickListener(listener);
         rbtnEnd.setOnClickListener(listener);
         tvFinish.setOnClickListener(listener);
-        ivMenu.setOnClickListener(listener);
+        ivCommitMsg.setOnClickListener(listener);
 
         aMap.setOnMarkerClickListener(this);
         UiSettings uiSettings = aMap.getUiSettings();
@@ -261,9 +263,9 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
                     }
                     break;
 
-                case R.id.iv_menu:
+                case R.id.iv_commit_msg:
                     Log.i(TAG, "跳转用户提交数据菜单");
-                    ivPlus.startAnimation(animOpen);
+                    ivCommitMsg.startAnimation(animOpen);
                     startActivity(new Intent(MapActivity.this, CommitActivity.class));
                     break;
 

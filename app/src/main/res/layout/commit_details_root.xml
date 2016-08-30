@@ -50,7 +50,7 @@
                         android:textSize="16sp" />
 
                     <TextView
-                        android:id="@+id/tv_commit_status"
+                        android:id="@+id/tv_commit_status_root_msg"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -175,7 +175,7 @@
                     android:orientation="horizontal">
 
                     <Button
-                        android:id="@+id/btn_confirm"
+                        android:id="@+id/btn_apply"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_margin="10dp"
@@ -184,7 +184,7 @@
                         android:text="应用" />
 
                     <Button
-                        android:id="@+id/btn_cancel"
+                        android:id="@+id/btn_refuse"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_margin="10dp"

@@ -22,9 +22,9 @@ public class Event extends BmobObject implements Serializable {
     private Date endTime;
     private String username;
     private Boolean isFinished;
-    private Boolean commStatus;
+    private String commStatus;
 
-    public void setCommStatus(Boolean commStatus) {
+    public void setCommStatus(String commStatus) {
         this.commStatus = commStatus;
     }
 
@@ -132,7 +132,7 @@ public class Event extends BmobObject implements Serializable {
         return isFinished;
     }
 
-    public Boolean getCommStatus() {
+    public String getCommStatus() {
         return commStatus;
     }
 }

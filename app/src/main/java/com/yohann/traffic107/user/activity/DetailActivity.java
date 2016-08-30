@@ -17,6 +17,7 @@ public class DetailActivity extends BaseActivity {
     private TagGroup labelGroup;
     private TextView tvTitle;
     private TextView tvDesc;
+    private TextView tvCommitStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +28,13 @@ public class DetailActivity extends BaseActivity {
     }
 
     private void init() {
-        tvTime = (TextView) findViewById(R.id.tv_time_user);
+        tvTime = (TextView) findViewById(R.id.tv_time_commit_user);
         tvStartLoc = (TextView) findViewById(R.id.tv_start_Loc_user);
         tvEndLoc = (TextView) findViewById(R.id.tv_end_loc_user);
         labelGroup = (TagGroup) findViewById(R.id.label_group_user);
         tvTitle = (TextView) findViewById(R.id.tv_title_user);
         tvDesc = (TextView) findViewById(R.id.tv_desc_user);
+        tvCommitStatus = (TextView) findViewById(R.id.tv_commit_status_user);
     }
 
     private void loadData() {
@@ -44,12 +46,14 @@ public class DetailActivity extends BaseActivity {
         bundle.getString("labels");
         bundle.getString("title");
         bundle.getString("desc");
+        bundle.getBoolean("commStatus");
 
         tvTime.setText(bundle.getString("startTime"));
         tvStartLoc.setText(bundle.getString("endLoc"));
         tvEndLoc.setText(bundle.getString("endLoc"));
         tvTitle.setText(bundle.getString("title"));
         tvDesc.setText(bundle.getString("desc"));
+        tvCommitStatus.setText(bundle.getString("commStatus"));
 
         String[] labels = StringUtils.getArrayFromString(bundle.getString("labels"));
         labelGroup.setTags(labels);
