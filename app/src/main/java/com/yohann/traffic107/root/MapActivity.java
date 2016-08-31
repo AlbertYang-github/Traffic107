@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.MapView;
@@ -42,12 +41,13 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
     private RadioGroup rg;
     private RadioButton rbtnStart;
     private RadioButton rbtnEnd;
-    private TextView tvFinish;
+    private ImageView ivFinish;
     private RelativeLayout rlBtn;
     private ImageView ivCommitMsg;
     private Animation animOpen;
     private AMap aMap;
     private ImageView ivReminder;
+    private ImageView ivFlush;
 
     private String editflag;
     private boolean btnStatus;
@@ -63,6 +63,8 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
     private Marker endMarker;
     private NetUtils netUtils;
     private LocationInit locationInit;
+    private Animation animEditOpen;
+    private Animation animEditClose;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,19 +116,23 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
         rg = (RadioGroup) findViewById(R.id.rg);
         rbtnStart = (RadioButton) findViewById(R.id.rbtn_start);
         rbtnEnd = (RadioButton) findViewById(R.id.rbtn_end);
-        tvFinish = (TextView) findViewById(R.id.tv_finish);
+        ivFinish = (ImageView) findViewById(R.id.iv_finish);
         rlBtn = (RelativeLayout) findViewById(R.id.rl_btn);
         ivCommitMsg = (ImageView) findViewById(R.id.iv_commit_msg);
         ivReminder = (ImageView) findViewById(R.id.iv_msg_reminder);
         aMap = mapView.getMap();
         animOpen = AnimationUtils.loadAnimation(this, R.anim.plus_open_anim);
+        animEditOpen = AnimationUtils.loadAnimation(this, R.anim.edit_open);
+        animEditClose = AnimationUtils.loadAnimation(this, R.anim.edit_close);
+        ivFlush = (ImageView) findViewById(R.id.iv_flush_root);
 
         MyOnClickListener listener = new MyOnClickListener();
         ivPlus.setOnClickListener(listener);
         rbtnStart.setOnClickListener(listener);
         rbtnEnd.setOnClickListener(listener);
-        tvFinish.setOnClickListener(listener);
+        ivFinish.setOnClickListener(listener);
         ivCommitMsg.setOnClickListener(listener);
+        ivFlush.setOnClickListener(listener);
 
         aMap.setOnMarkerClickListener(this);
         UiSettings uiSettings = aMap.getUiSettings();
@@ -240,6 +246,7 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
                     Log.i(TAG, "点击添加事件");
                     ivPlus.startAnimation(animOpen);
                     if (btnStatus) {
+                        rlBtn.startAnimation(animEditClose);
                         rlBtn.setVisibility(View.INVISIBLE);
                         btnStatus = false;
                         //清屏
@@ -258,6 +265,7 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
                             mapView.invalidate();
                         }
                     } else {
+                        rlBtn.startAnimation(animEditOpen);
                         rlBtn.setVisibility(View.VISIBLE);
                         btnStatus = true;
                     }
@@ -279,7 +287,7 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
                     editflag = "end";
                     break;
 
-                case R.id.tv_finish:
+                case R.id.iv_finish:
                     if (startLongitude == null || startLatitude == null || endLongitude == null || endLatitude == null) {
                         ViewUtils.show(MapActivity.this, "请选择起始点和终止点");
                     } else {
@@ -295,6 +303,10 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
                         intent.putExtras(bundle);
                         startActivityForResult(intent, Constants.EDIT);
                     }
+                    break;
+
+                case R.id.iv_flush_root:
+                    netUtils.loadMarker();
                     break;
             }
         }

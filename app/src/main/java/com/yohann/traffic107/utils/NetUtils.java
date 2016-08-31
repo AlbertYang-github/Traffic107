@@ -46,44 +46,24 @@ public class NetUtils {
                 list.add(new BmobQuery<Event>().addWhereEqualTo("commStatus", "审核成功"));
                 query.and(list);
 
-                query.findObjects(context, new FindListener<Event>() {
+                query.findObjects(new FindListener<Event>() {
                     @Override
-                    public void onSuccess(List<Event> list) {
-                        if (list.size() == 0) {
-                            ViewUtils.show(context, "没有数据可加载");
-                        } else {
-                            for (Event event : list) {
-                                Variable.eventMap.put(event.getObjectId(), event);
+                    public void done(List<Event> list, BmobException e) {
+                        if (e == null) {
+                            if (list.size() == 0) {
+                                ViewUtils.show(context, "没有数据可加载");
+                            } else {
+                                for (Event event : list) {
+                                    Variable.eventMap.put(event.getObjectId(), event);
+                                }
+                                ViewUtils.show(context, "加载了" + Variable.eventMap.size() + "条数据");
+                                drawPath();
                             }
-                            ViewUtils.show(context, "加载了" + Variable.eventMap.size() + "条数据");
-                            drawPath();
+                        } else {
+                            ViewUtils.show(context, "数据加载失败 " + e.getErrorCode());
                         }
                     }
-
-                    @Override
-                    public void onError(int i, String s) {
-                        ViewUtils.show(context, "数据加载失败 " + i);
-                    }
                 });
-
-//                query.findObjects(new FindListener<Event>() {
-//                    @Override
-//                    public void done(List<Event> list, BmobException e) {
-//                        if (e == null) {
-//                            if (list.size() == 0) {
-//                                ViewUtils.show(context, "没有数据可加载");
-//                            } else {
-//                                for (Event event : list) {
-//                                    Variable.eventMap.put(event.getObjectId(), event);
-//                                }
-//                                ViewUtils.show(context, "加载了" + Variable.eventMap.size() + "条数据");
-//                                drawPath();
-//                            }
-//                        } else {
-//                            ViewUtils.show(context, "数据加载失败 " + e.getErrorCode());
-//                        }
-//                    }
-//                });
             }
         }.start();
     }
@@ -100,44 +80,24 @@ public class NetUtils {
                 list.add(new BmobQuery<Event>().addWhereEqualTo("username", Variable.userName));
                 query.and(list);
 
-                query.findObjects(context, new FindListener<Event>() {
+                query.findObjects(new FindListener<Event>() {
                     @Override
-                    public void onSuccess(List<Event> list) {
-                        if (list.size() == 0) {
-                            ViewUtils.show(context, "没有数据可加载");
-                        } else {
-                            for (Event event : list) {
-                                Variable.eventMap.put(event.getObjectId(), event);
+                    public void done(List<Event> list, BmobException e) {
+                        if (e == null) {
+                            if (list.size() == 0) {
+                                ViewUtils.show(context, "没有数据可加载");
+                            } else {
+                                for (Event event : list) {
+                                    Variable.eventMap.put(event.getObjectId(), event);
+                                }
+                                ViewUtils.show(context, "加载了" + Variable.eventMap.size() + "条数据");
+                                drawPath();
                             }
-                            ViewUtils.show(context, "加载了" + Variable.eventMap.size() + "条数据");
-                            drawPath();
+                        } else {
+                            ViewUtils.show(context, "数据加载失败 " + e.getErrorCode());
                         }
                     }
-
-                    @Override
-                    public void onError(int i, String s) {
-                        ViewUtils.show(context, "数据加载失败 " + i);
-                    }
                 });
-
-//                query.findObjects(new FindListener<Event>() {
-//                    @Override
-//                    public void done(List<Event> list, BmobException e) {
-//                        if (e == null) {
-//                            if (list.size() == 0) {
-//                                ViewUtils.show(context, "没有数据可加载");
-//                            } else {
-//                                for (Event event : list) {
-//                                    Variable.eventMap.put(event.getObjectId(), event);
-//                                }
-//                                ViewUtils.show(context, "加载了" + Variable.eventMap.size() + "条数据");
-//                                drawPath();
-//                            }
-//                        } else {
-//                            ViewUtils.show(context, "数据加载失败 " + e.getErrorCode());
-//                        }
-//                    }
-//                });
             }
         }.start();
     }

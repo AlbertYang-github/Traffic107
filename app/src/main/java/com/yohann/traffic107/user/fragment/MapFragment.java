@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.yohann.traffic107.R;
@@ -23,10 +24,17 @@ import com.yohann.traffic107.user.activity.HomeActivity;
 import com.yohann.traffic107.utils.BmobUtils;
 import com.yohann.traffic107.utils.LocationInit;
 import com.yohann.traffic107.utils.NetUtils;
+import com.yohann.traffic107.utils.ViewUtils;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 
 /**
  * Created by Yohann on 2016/8/28.
@@ -38,6 +46,8 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
     private AMap aMap;
     private NetUtils netUtils;
     private LocationInit locationInit;
+    private ImageView ivFlush;
+    private boolean status = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,10 +99,60 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
     private void init(View view) {
         ivMenu = (ImageView) view.findViewById(R.id.iv_menu_home);
         mapView = (MapView) view.findViewById(R.id.map_home);
+        ivFlush = (ImageView) view.findViewById(R.id.iv_flush_user);
         aMap = mapView.getMap();
         netUtils = new NetUtils(activity, aMap);
         locationInit = new LocationInit(activity, aMap);
         aMap.setOnMarkerClickListener(this);
+        UiSettings uiSettings = aMap.getUiSettings();
+        uiSettings.setZoomControlsEnabled(false);
+
+        ivFlush.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                netUtils.loadMarker();
+            }
+        });
+
+        //启动一个线程轮询 （Event数据库的数）
+        new Thread() {
+            @Override
+            public void run() {
+
+                BmobQuery<Event> query = new BmobQuery<>();
+                query.addWhereEqualTo("isFinished", false);
+                List<BmobQuery<Event>> list = new ArrayList<>();
+                list.add(new BmobQuery<Event>().addWhereEqualTo("commStatus", "审核成功"));
+                query.and(list);
+
+                while (status) {
+                    query.findObjects(new FindListener<Event>() {
+                        @Override
+                        public void done(List<Event> list, BmobException e) {
+                            if (e == null) {
+                                if (list.size() == 0) {
+                                } else {
+                                    if (Variable.eventMap.size() != list.size()) {
+                                        for (Event event : list) {
+                                            Variable.eventMap.put(event.getObjectId(), event);
+                                        }
+                                        ViewUtils.show(activity, "数据有更新");
+                                        netUtils.drawPath();
+                                    }
+                                }
+                            } else {
+                            }
+                        }
+                    });
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
     }
 
     @Override
@@ -141,5 +201,11 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
         }
 
         return true;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        status = false;
     }
 }

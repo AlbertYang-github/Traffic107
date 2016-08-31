@@ -110,60 +110,32 @@ public class LoginActivity extends BaseActivity {
                 public void run() {
                     BmobQuery<User> query = new BmobQuery<>();
 
-                    query.findObjects(LoginActivity.this, new FindListener<User>() {
+                    query.findObjects(new FindListener<User>() {
                         @Override
-                        public void onSuccess(List<User> list) {
-                            boolean isSuccessful = false;
-                            for (User user : list) {
-                                if (username.equals(user.getUsername()) && password.equals(user.getPassword())) {
-                                    //登录成功
-                                    Variable.userId = user.getObjectId();
-                                    Variable.userName = user.getUsername();
-                                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                                    finish();
-                                    ViewUtils.show(LoginActivity.this, "登录成功");
-                                    isSuccessful = true;
-                                    break;
+                        public void done(List<User> list, BmobException e) {
+                            if (e == null) {
+                                boolean isSuccessful = false;
+                                for (User user : list) {
+                                    if (username.equals(user.getUsername()) && password.equals(user.getPassword())) {
+                                        //登录成功
+                                        Variable.userId = user.getObjectId();
+                                        Variable.userName = user.getUsername();
+                                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                                        finish();
+                                        ViewUtils.show(LoginActivity.this, "登录成功");
+                                        isSuccessful = true;
+                                        break;
+                                    }
                                 }
-                            }
-                            if (isSuccessful) {
+                                if (isSuccessful) {
+                                } else {
+                                    ViewUtils.show(LoginActivity.this, "登录失败");
+                                }
                             } else {
-                                ViewUtils.show(LoginActivity.this, "登录失败");
+                                ViewUtils.show(LoginActivity.this, "异常 " + e.getErrorCode());
                             }
-                        }
-
-                        @Override
-                        public void onError(int i, String s) {
-                            ViewUtils.show(LoginActivity.this, "异常 " + i);
                         }
                     });
-
-//                    query.findObjects(new FindListener<User>() {
-//                        @Override
-//                        public void done(List<User> list, BmobException e) {
-//                            if (e == null) {
-//                                boolean isSuccessful = false;
-//                                for (User user : list) {
-//                                    if (username.equals(user.getUsername()) && password.equals(user.getPassword())) {
-//                                        //登录成功
-//                                        Variable.userId = user.getObjectId();
-//                                        Variable.userName = user.getUsername();
-//                                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-//                                        finish();
-//                                        ViewUtils.show(LoginActivity.this, "登录成功");
-//                                        isSuccessful = true;
-//                                        break;
-//                                    }
-//                                }
-//                                if (isSuccessful) {
-//                                } else {
-//                                    ViewUtils.show(LoginActivity.this, "登录失败");
-//                                }
-//                            } else {
-//                                ViewUtils.show(LoginActivity.this, "异常 " + e.getErrorCode());
-//                            }
-//                        }
-//                    });
 
                     pb_user.post(new Runnable() {
                         @Override
@@ -198,58 +170,31 @@ public class LoginActivity extends BaseActivity {
                 public void run() {
                     BmobQuery<Root> query = new BmobQuery<>();
 
-                    query.findObjects(LoginActivity.this, new FindListener<Root>() {
+                    query.findObjects(new FindListener<Root>() {
                         @Override
-                        public void onSuccess(List<Root> list) {
-                            boolean isSuccessful = false;
-                            for (Root root : list) {
-                                if (username.equals(root.getUsername()) && password.equals(root.getPassword())) {
-                                    //登录成功
-                                    Variable.rootId = root.getObjectId();
-                                    startActivity(new Intent(LoginActivity.this, com.yohann.traffic107.root.MapActivity.class));
-                                    finish();
-                                    ViewUtils.show(LoginActivity.this, "登录成功");
-                                    isSuccessful = true;
-                                    break;
+                        public void done(List<Root> list, BmobException e) {
+                            if (e == null) {
+                                boolean isSuccessful = false;
+                                for (Root root : list) {
+                                    if (username.equals(root.getUsername()) && password.equals(root.getPassword())) {
+                                        //登录成功
+                                        Variable.rootId = root.getObjectId();
+                                        startActivity(new Intent(LoginActivity.this, com.yohann.traffic107.root.MapActivity.class));
+                                        finish();
+                                        ViewUtils.show(LoginActivity.this, "登录成功");
+                                        isSuccessful = true;
+                                        break;
+                                    }
                                 }
-                            }
-                            if (isSuccessful) {
+                                if (isSuccessful) {
+                                } else {
+                                    ViewUtils.show(LoginActivity.this, "登录失败");
+                                }
                             } else {
-                                ViewUtils.show(LoginActivity.this, "登录失败");
+                                ViewUtils.show(LoginActivity.this, "异常 " + e.getErrorCode());
                             }
-                        }
-
-                        @Override
-                        public void onError(int i, String s) {
-                            ViewUtils.show(LoginActivity.this, "异常 " + i);
                         }
                     });
-
-//                    query.findObjects(new FindListener<Root>() {
-//                        @Override
-//                        public void done(List<Root> list, BmobException e) {
-//                            if (e == null) {
-//                                boolean isSuccessful = false;
-//                                for (Root root : list) {
-//                                    if (username.equals(root.getUsername()) && password.equals(root.getPassword())) {
-//                                        //登录成功
-//                                        Variable.rootId = root.getObjectId();
-//                                        startActivity(new Intent(LoginActivity.this, com.yohann.traffic107.root.MapActivity.class));
-//                                        finish();
-//                                        ViewUtils.show(LoginActivity.this, "登录成功");
-//                                        isSuccessful = true;
-//                                        break;
-//                                    }
-//                                }
-//                                if (isSuccessful) {
-//                                } else {
-//                                    ViewUtils.show(LoginActivity.this, "登录失败");
-//                                }
-//                            } else {
-//                                ViewUtils.show(LoginActivity.this, "异常 " + e.getErrorCode());
-//                            }
-//                        }
-//                    });
 
                     pb_root.post(new Runnable() {
                         @Override

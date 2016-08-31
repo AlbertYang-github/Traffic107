@@ -18,6 +18,7 @@ import com.yohann.traffic107.utils.ViewUtils;
 
 import java.util.Date;
 
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 import me.gujun.android.taggroup.TagGroup;
 
@@ -62,34 +63,19 @@ public class DetailActivity extends BaseActivity {
                             event.setFinished(true);
                             event.setEndTime(new Date(System.currentTimeMillis()));
 
-                            event.update(DetailActivity.this, Variable.eventId, new UpdateListener() {
+                            event.update(Variable.eventId, new UpdateListener() {
                                 @Override
-                                public void onSuccess() {
-                                    ViewUtils.show(DetailActivity.this, "删除成功");
-                                    Variable.eventMap.remove(Variable.eventId);
-                                    setResult(RESULT_OK, null);
-                                    finish();
-                                }
-
-                                @Override
-                                public void onFailure(int i, String s) {
-                                    ViewUtils.show(DetailActivity.this, "删除失败 " + i);
+                                public void done(BmobException e) {
+                                    if (e == null) {
+                                        ViewUtils.show(DetailActivity.this, "删除成功");
+                                        Variable.eventMap.remove(Variable.eventId);
+                                        setResult(RESULT_OK, null);
+                                        finish();
+                                    } else {
+                                        ViewUtils.show(DetailActivity.this, "删除失败 " + e.getErrorCode());
+                                    }
                                 }
                             });
-
-//                            event.update(Variable.eventId, new UpdateListener() {
-//                                @Override
-//                                public void done(BmobException e) {
-//                                    if (e == null) {
-//                                        ViewUtils.show(DetailActivity.this, "删除成功");
-//                                        Variable.eventMap.remove(Variable.eventId);
-//                                        setResult(RESULT_OK, null);
-//                                        finish();
-//                                    } else {
-//                                        ViewUtils.show(DetailActivity.this, "删除失败 " + e.getErrorCode());
-//                                    }
-//                                }
-//                            });
                         }
                     }
                 });

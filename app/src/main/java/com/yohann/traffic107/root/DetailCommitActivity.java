@@ -16,6 +16,7 @@ import com.yohann.traffic107.utils.ViewUtils;
 
 import java.text.SimpleDateFormat;
 
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 import me.gujun.android.taggroup.TagGroup;
 
@@ -84,32 +85,18 @@ public class DetailCommitActivity extends BaseActivity {
                             Event event = new Event();
                             event.setCommStatus("审核成功");
 
-                            event.update(DetailCommitActivity.this, objectId, new UpdateListener() {
+                            event.update(objectId, new UpdateListener() {
                                 @Override
-                                public void onSuccess() {
-                                    ViewUtils.show(DetailCommitActivity.this, "应用成功");
-                                    setResult(RESULT_OK);
-                                    finish();
-                                }
-
-                                @Override
-                                public void onFailure(int i, String s) {
-                                    ViewUtils.show(DetailCommitActivity.this, "应用失败 " + i);
+                                public void done(BmobException e) {
+                                    if (e == null) {
+                                        ViewUtils.show(DetailCommitActivity.this, "应用成功");
+                                        setResult(RESULT_OK);
+                                        finish();
+                                    } else {
+                                        ViewUtils.show(DetailCommitActivity.this, "应用失败 " + e.getErrorCode());
+                                    }
                                 }
                             });
-
-//                            event.update(objectId, new UpdateListener() {
-//                                @Override
-//                                public void done(BmobException e) {
-//                                    if (e == null) {
-//                                        ViewUtils.show(DetailCommitActivity.this, "应用成功");
-//                                        setResult(RESULT_OK);
-//                                        finish();
-//                                    } else {
-//                                        ViewUtils.show(DetailCommitActivity.this, "应用失败 " + e.getErrorCode());
-//                                    }
-//                                }
-//                            });
                         }
                     });
                     builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -129,32 +116,18 @@ public class DetailCommitActivity extends BaseActivity {
                             Event event = new Event();
                             event.setCommStatus("审核失败");
 
-                            event.update(DetailCommitActivity.this, objectId, new UpdateListener() {
+                            event.update(objectId, new UpdateListener() {
                                 @Override
-                                public void onSuccess() {
-                                    ViewUtils.show(DetailCommitActivity.this, "拒绝成功");
-                                    setResult(RESULT_OK);
-                                    finish();
-                                }
-
-                                @Override
-                                public void onFailure(int i, String s) {
-                                    ViewUtils.show(DetailCommitActivity.this, "拒绝失败 " + i);
+                                public void done(BmobException e) {
+                                    if (e == null) {
+                                        ViewUtils.show(DetailCommitActivity.this, "拒绝成功");
+                                        setResult(RESULT_OK);
+                                        finish();
+                                    } else {
+                                        ViewUtils.show(DetailCommitActivity.this, "拒绝失败 " + e.getErrorCode());
+                                    }
                                 }
                             });
-
-//                            event.update(objectId, new UpdateListener() {
-//                                @Override
-//                                public void done(BmobException e) {
-//                                    if (e == null) {
-//                                        ViewUtils.show(DetailCommitActivity.this, "拒绝成功");
-//                                        setResult(RESULT_OK);
-//                                        finish();
-//                                    } else {
-//                                        ViewUtils.show(DetailCommitActivity.this, "拒绝失败 " + e.getErrorCode());
-//                                    }
-//                                }
-//                            });
                         }
                     });
                     builderR.setNegativeButton("取消", new DialogInterface.OnClickListener() {

@@ -209,32 +209,18 @@ public class EditActivity extends BaseActivity {
                         @Override
                         public void run() {
 
-                            event.save(EditActivity.this, new SaveListener() {
+                            event.save(new SaveListener<String>() {
                                 @Override
-                                public void onSuccess() {
-                                    ViewUtils.show(EditActivity.this, "上传成功");
-                                    setResult(RESULT_OK, null);
-                                    finish();
-                                }
-
-                                @Override
-                                public void onFailure(int i, String s) {
-                                    ViewUtils.show(EditActivity.this, "上传失败" + i);
+                                public void done(String s, BmobException e) {
+                                    if (e == null) {
+                                        ViewUtils.show(EditActivity.this, "上传成功");
+                                        setResult(RESULT_OK, null);
+                                        finish();
+                                    } else {
+                                        ViewUtils.show(EditActivity.this, "上传失败" + e.getErrorCode());
+                                    }
                                 }
                             });
-
-//                            event.save(new SaveListener<String>() {
-//                                @Override
-//                                public void done(String s, BmobException e) {
-//                                    if (e == null) {
-//                                        ViewUtils.show(EditActivity.this, "上传成功");
-//                                        setResult(RESULT_OK, null);
-//                                        finish();
-//                                    } else {
-//                                        ViewUtils.show(EditActivity.this, "上传失败" + e.getErrorCode());
-//                                    }
-//                                }
-//                            });
                         }
                     }.start();
                     break;

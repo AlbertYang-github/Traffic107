@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
 public class CommitActivity extends BaseActivity {
@@ -119,46 +120,25 @@ public class CommitActivity extends BaseActivity {
                 BmobQuery<Event> query = new BmobQuery<>();
                 query.addWhereEqualTo("commStatus", "审核中");
 
-                query.findObjects(CommitActivity.this, new FindListener<Event>() {
+                query.findObjects(new FindListener<Event>() {
                     @Override
-                    public void onSuccess(List<Event> list) {
-                        if (list.size() == 0) {
-                            ViewUtils.show(CommitActivity.this, "没有数据可加载");
-                        } else {
-                            for (Event event : list) {
-                                keyList.add(event.getObjectId());
-                                eventMap.put(event.getObjectId(), event);
+                    public void done(List<Event> list, BmobException e) {
+                        if (e == null) {
+                            if (list.size() == 0) {
+                                ViewUtils.show(CommitActivity.this, "没有数据可加载");
+                            } else {
+                                for (Event event : list) {
+                                    keyList.add(event.getObjectId());
+                                    eventMap.put(event.getObjectId(), event);
+                                }
+                                handler.sendEmptyMessage(SHOW);
+                                ViewUtils.show(CommitActivity.this, "加载了" + list.size() + "条数据");
                             }
-                            handler.sendEmptyMessage(SHOW);
-                            ViewUtils.show(CommitActivity.this, "加载了" + list.size() + "条数据");
+                        } else {
+                            ViewUtils.show(CommitActivity.this, "数据加载失败 " + e.getErrorCode());
                         }
                     }
-
-                    @Override
-                    public void onError(int i, String s) {
-                        ViewUtils.show(CommitActivity.this, "数据加载失败 " + i);
-                    }
                 });
-
-//                query.findObjects(new FindListener<Event>() {
-//                    @Override
-//                    public void done(List<Event> list, BmobException e) {
-//                        if (e == null) {
-//                            if (list.size() == 0) {
-//                                ViewUtils.show(CommitActivity.this, "没有数据可加载");
-//                            } else {
-//                                for (Event event : list) {
-//                                    keyList.add(event.getObjectId());
-//                                    eventMap.put(event.getObjectId(), event);
-//                                }
-//                                handler.sendEmptyMessage(SHOW);
-//                                ViewUtils.show(CommitActivity.this, "加载了" + list.size() + "条数据");
-//                            }
-//                        } else {
-//                            ViewUtils.show(CommitActivity.this, "数据加载失败 " + e.getErrorCode());
-//                        }
-//                    }
-//                });
             }
 
 

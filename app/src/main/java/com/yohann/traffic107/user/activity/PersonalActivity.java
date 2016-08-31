@@ -120,44 +120,24 @@ public class PersonalActivity extends BaseActivity {
                 BmobQuery<Event> query = new BmobQuery<>();
                 query.addWhereEqualTo("username", username);
 
-                query.findObjects(PersonalActivity.this, new FindListener<Event>() {
+                query.findObjects(new FindListener<Event>() {
                     @Override
-                    public void onSuccess(List<Event> list) {
-                        if (list.size() == 0) {
-                            ViewUtils.show(PersonalActivity.this, "没有数据可加载");
-                        } else {
-                            for (Event event : list) {
-                                commitList.add(event);
+                    public void done(List<Event> list, BmobException e) {
+                        if (e == null) {
+                            if (list.size() == 0) {
+                                ViewUtils.show(PersonalActivity.this, "没有数据可加载");
+                            } else {
+                                for (Event event : list) {
+                                    commitList.add(event);
+                                }
+                                handler.sendEmptyMessage(SHOW);
+                                ViewUtils.show(PersonalActivity.this, "加载了" + list.size() + "条数据");
                             }
-                            handler.sendEmptyMessage(SHOW);
-                            ViewUtils.show(PersonalActivity.this, "加载了" + list.size() + "条数据");
+                        } else {
+                            ViewUtils.show(PersonalActivity.this, "数据加载失败 " + e.getErrorCode());
                         }
                     }
-
-                    @Override
-                    public void onError(int i, String s) {
-                        ViewUtils.show(PersonalActivity.this, "数据加载失败 " + i);
-                    }
                 });
-
-//                query.findObjects(new FindListener<Event>() {
-//                    @Override
-//                    public void done(List<Event> list, BmobException e) {
-//                        if (e == null) {
-//                            if (list.size() == 0) {
-//                                ViewUtils.show(PersonalActivity.this, "没有数据可加载");
-//                            } else {
-//                                for (Event event : list) {
-//                                    commitList.add(event);
-//                                }
-//                                handler.sendEmptyMessage(SHOW);
-//                                ViewUtils.show(PersonalActivity.this, "加载了" + list.size() + "条数据");
-//                            }
-//                        } else {
-//                            ViewUtils.show(PersonalActivity.this, "数据加载失败 " + e.getErrorCode());
-//                        }
-//                    }
-//                });
             }
 
 

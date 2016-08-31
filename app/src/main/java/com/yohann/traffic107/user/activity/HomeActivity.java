@@ -19,11 +19,6 @@ import com.yohann.traffic107.user.fragment.AddFragment;
 import com.yohann.traffic107.user.fragment.AskFragment;
 import com.yohann.traffic107.user.fragment.MapFragment;
 import com.yohann.traffic107.user.fragment.StatisticsFragment;
-import com.yohann.traffic107.utils.ViewUtils;
-
-import cn.bmob.newim.BmobIM;
-import cn.bmob.newim.listener.ConnectListener;
-import cn.bmob.v3.exception.BmobException;
 
 public class HomeActivity extends BaseActivity {
     private static final String TAG = "HomeActivityInfo";
@@ -57,18 +52,6 @@ public class HomeActivity extends BaseActivity {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(R.id.fl_content, mapFragment).commit();
 
-        //使用当前用户id连接IM服务器
-        BmobIM.connect(Variable.userId, new ConnectListener() {
-            @Override
-            public void done(String s, BmobException e) {
-                if (e == null) {
-                    ViewUtils.show(HomeActivity.this, Variable.userName + "IM连接成功");
-                } else {
-                    ViewUtils.show(HomeActivity.this, "异常 " + e.getErrorCode());
-                }
-            }
-        });
-
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
@@ -79,7 +62,7 @@ public class HomeActivity extends BaseActivity {
                         fragmentManager.beginTransaction().replace(R.id.fl_content, new MapFragment()).commit();
                         break;
 
-                    case "添加路况":
+                    case "发布路况":
                         fragmentManager.beginTransaction().replace(R.id.fl_content, new AddFragment()).commit();
                         break;
 
@@ -106,11 +89,5 @@ public class HomeActivity extends BaseActivity {
     public void skipMine(View view) {
         startActivity(new Intent(this, PersonalActivity.class));
         dlDrawer.closeDrawers();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        BmobIM.getInstance().disConnect();
     }
 }
