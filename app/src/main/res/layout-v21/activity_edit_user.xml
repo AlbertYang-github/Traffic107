@@ -204,6 +204,13 @@
 
             </LinearLayout>
 
+            <ProgressBar
+                android:id="@+id/pb_commit"
+                style="@android:style/Widget.Material.ProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible" />
+
         </FrameLayout>
 
     </ScrollView>

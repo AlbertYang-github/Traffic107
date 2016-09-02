@@ -306,6 +306,7 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
                     break;
 
                 case R.id.iv_flush_root:
+                    aMap.clear();
                     netUtils.loadMarker();
                     break;
             }

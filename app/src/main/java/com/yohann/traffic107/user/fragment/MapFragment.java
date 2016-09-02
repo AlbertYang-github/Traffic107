@@ -133,10 +133,13 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
                                 if (list.size() == 0) {
                                 } else {
                                     if (Variable.eventMap.size() != list.size()) {
+                                        //清理原来的数据
+                                        Variable.eventMap.clear();
                                         for (Event event : list) {
                                             Variable.eventMap.put(event.getObjectId(), event);
                                         }
                                         ViewUtils.show(activity, "数据有更新");
+                                        aMap.clear();
                                         netUtils.drawPath();
                                     }
                                 }

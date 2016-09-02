@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.amap.api.services.core.LatLonPoint;
@@ -44,6 +45,7 @@ public class EditActivity extends BaseActivity {
     private TagGroup tagGroup;
     private TextView tvLabelHint;
     private TextView tvTime;
+    private ProgressBar pbCommit;
     private Button btnCommit;
     private ArrayList<String> addressList;
     private ArrayList<String> labelList;
@@ -78,6 +80,7 @@ public class EditActivity extends BaseActivity {
         btnCommit = (Button) findViewById(R.id.btn_commit);
         etTitle = (EditText) findViewById(R.id.et_title);
         etDesc = (EditText) findViewById(R.id.et_desc);
+        pbCommit = (ProgressBar) findViewById(R.id.pb_commit);
 
         geocodeSearch = new GeocodeSearch(this);
         addressList = new ArrayList<>();
@@ -188,6 +191,7 @@ public class EditActivity extends BaseActivity {
                     break;
 
                 case R.id.btn_commit:
+                    pbCommit.setVisibility(View.VISIBLE);
                     String labels = StringUtils.getStringFromArrayList(labelList);
 
                     final Event event = new Event();
@@ -219,6 +223,12 @@ public class EditActivity extends BaseActivity {
                                     } else {
                                         ViewUtils.show(EditActivity.this, "提交失败" + e.getErrorCode());
                                     }
+                                }
+                            });
+                            pbCommit.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    pbCommit.setVisibility(View.INVISIBLE);
                                 }
                             });
                         }
