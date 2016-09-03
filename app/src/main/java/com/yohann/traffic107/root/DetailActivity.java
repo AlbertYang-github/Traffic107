@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.Constants.Variable;
 import com.yohann.traffic107.common.activity.BaseActivity;
-import com.yohann.traffic107.common.bean.Event;
+import com.yohann.traffic107.common.bean.DoublePoiEvent;
 import com.yohann.traffic107.utils.StringUtils;
 import com.yohann.traffic107.utils.ViewUtils;
 
@@ -59,11 +59,11 @@ public class DetailActivity extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         if (TextUtils.isEmpty(Variable.eventId)) {
                         } else {
-                            Event event = new Event();
-                            event.setFinished(true);
-                            event.setEndTime(new Date(System.currentTimeMillis()));
+                            DoublePoiEvent doublePoiEvent = new DoublePoiEvent();
+                            doublePoiEvent.setFinished(true);
+                            doublePoiEvent.setEndTime(new Date(System.currentTimeMillis()));
 
-                            event.update(Variable.eventId, new UpdateListener() {
+                            doublePoiEvent.update(Variable.eventId, new UpdateListener() {
                                 @Override
                                 public void done(BmobException e) {
                                     if (e == null) {

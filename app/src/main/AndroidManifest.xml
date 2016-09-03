@@ -30,11 +30,11 @@
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <!--摄像头-->
+    <!-- 摄像头 -->
     <uses-permission android:name="android.permission.CAMERA" />
-    <!--录音-->
+    <!-- 录音 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <!--通知震动-->
+    <!-- 通知震动 -->
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
@@ -57,7 +57,7 @@
         <activity android:name=".root.MapActivity" />
         <activity android:name=".common.activity.BaseActivity" />
         <activity android:name=".root.CommitActivity" />
-        <activity android:name=".root.EditActivity" />
+        <activity android:name=".root.DoubleEventEditActivity" />
         <activity android:name=".user.activity.EditActivity" />
         <activity android:name=".user.activity.RegisterActivity" />
 
@@ -66,8 +66,9 @@
         <activity android:name=".root.DetailActivity" />
         <activity android:name=".user.activity.DetailActivity" />
         <activity android:name=".root.DetailCommitActivity" />
-        <activity android:name=".user.activity.HomeActivity"></activity>
-        <activity android:name=".user.activity.PersonalActivity"></activity>
+        <activity android:name=".user.activity.HomeActivity" />
+        <activity android:name=".user.activity.PersonalActivity" />
+        <activity android:name=".root.SingleEventActivity"></activity>
     </application>
 
 </manifest>

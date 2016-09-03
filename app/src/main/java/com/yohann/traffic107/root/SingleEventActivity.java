@@ -1,14 +1,14 @@
-package com.yohann.traffic107.user.activity;
+package com.yohann.traffic107.root;
 
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.amap.api.services.core.LatLonPoint;
@@ -17,8 +17,8 @@ import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.yohann.traffic107.R;
-import com.yohann.traffic107.common.activity.BaseActivity;
 import com.yohann.traffic107.common.bean.DoublePoiEvent;
+import com.yohann.traffic107.common.bean.SinglePoiEvent;
 import com.yohann.traffic107.utils.BmobUtils;
 import com.yohann.traffic107.utils.StringUtils;
 import com.yohann.traffic107.utils.ViewUtils;
@@ -31,37 +31,31 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import me.gujun.android.taggroup.TagGroup;
 
-public class EditActivity extends BaseActivity {
-
-    private static final String TAG = "EditActivityInfo";
+public class SingleEventActivity extends AppCompatActivity {
+    private static final String TAG = "SingleEventActivityInfo";
     private static int counter = 0;
 
-    private EditText etStartLoc;
-    private EditText etEndLoc;
+    private EditText etLoc;
     private EditText etTitle;
     private EditText etDesc;
     private ImageView ivAddLabels;
     private TagGroup tagGroup;
     private TextView tvLabelHint;
     private TextView tvTime;
-    private ProgressBar pbCommit;
-    private Button btnCommit;
-    private ArrayList<String> addressList;
+    private Button btnFinish;
     private ArrayList<String> labelList;
     private GeocodeSearch geocodeSearch;
     private String address;
-    private Double startLongitude;
-    private Double startLatitude;
-    private Double endLongitude;
-    private Double endLatitude;
-    private String startLoc;
-    private String endLoc;
+    private Double longitude;
+    private Double latitude;
+    private String loc;
     private Date startDate;
+    private SinglePoiEvent event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_user);
+        setContentView(R.layout.activity_single_event);
         BmobUtils.init(this);
         init();
     }
@@ -70,19 +64,16 @@ public class EditActivity extends BaseActivity {
      * 初始化
      */
     private void init() {
-        etStartLoc = (EditText) findViewById(R.id.et_start_Loc);
-        etEndLoc = (EditText) findViewById(R.id.et_end_Loc);
+        etLoc = (EditText) findViewById(R.id.et_loc);
         ivAddLabels = (ImageView) findViewById(R.id.iv_add_labels);
         tagGroup = (TagGroup) findViewById(R.id.label_group);
         tvLabelHint = (TextView) findViewById(R.id.tv_label_hint);
         tvTime = (TextView) findViewById(R.id.tv_time);
-        btnCommit = (Button) findViewById(R.id.btn_commit);
+        btnFinish = (Button) findViewById(R.id.btn_finish);
         etTitle = (EditText) findViewById(R.id.et_title);
         etDesc = (EditText) findViewById(R.id.et_desc);
-        pbCommit = (ProgressBar) findViewById(R.id.pb_commit);
 
         geocodeSearch = new GeocodeSearch(this);
-        addressList = new ArrayList<>();
 
         //装载标签
         labelList = new ArrayList<>();
@@ -105,7 +96,7 @@ public class EditActivity extends BaseActivity {
         //添加监听
         MyOnClickListener listener = new MyOnClickListener();
         ivAddLabels.setOnClickListener(listener);
-        btnCommit.setOnClickListener(listener);
+        btnFinish.setOnClickListener(listener);
         geocodeSearch.setOnGeocodeSearchListener(new AddressListener());
 
         //获取当前时间
@@ -115,17 +106,10 @@ public class EditActivity extends BaseActivity {
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
+        longitude = bundle.getDouble("longitude");
+        latitude = bundle.getDouble("latitude");
 
-        startLongitude = bundle.getDouble("startLongitude");
-        startLatitude = bundle.getDouble("startLatitude");
-        endLongitude = bundle.getDouble("endLongitude");
-        endLatitude = bundle.getDouble("endLatitude");
-
-        Log.i(TAG, "startLongitude" + startLongitude + "startLatitude" +
-                startLatitude + "endLongitude" + endLongitude + "endLatitude" + endLatitude);
-
-        getAddress(startLatitude, startLongitude);
-        getAddress(endLatitude, endLongitude);
+        getAddress(latitude, longitude);
     }
 
     public void getAddress(double latitude, double longitude) {
@@ -134,11 +118,7 @@ public class EditActivity extends BaseActivity {
     }
 
     public void saveAddress() {
-        startLoc = addressList.get(0);
-        endLoc = addressList.get(1);
-        addressList.clear();
-        etStartLoc.setText(startLoc);
-        etEndLoc.setText(endLoc);
+        etLoc.setText(address);
     }
 
     /**
@@ -152,10 +132,10 @@ public class EditActivity extends BaseActivity {
             switch (v.getId()) {
                 //填写标签内容
                 case R.id.iv_add_labels:
-                    AlertDialog.Builder builder = new AlertDialog.Builder(EditActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SingleEventActivity.this);
                     final AlertDialog dialog = builder.create();
                     //将自定义布局设置给dialog
-                    View view = View.inflate(EditActivity.this, R.layout.labels_input, null);
+                    View view = View.inflate(SingleEventActivity.this, R.layout.labels_input, null);
 
                     final EditText etLabel = (EditText) view.findViewById(R.id.et_label);
                     Button btnConfirm = (Button) view.findViewById(R.id.btn_confirm);
@@ -189,43 +169,34 @@ public class EditActivity extends BaseActivity {
                     });
                     break;
 
-                case R.id.btn_commit:
-                    pbCommit.setVisibility(View.VISIBLE);
+                case R.id.btn_finish:
                     String labels = StringUtils.getStringFromArrayList(labelList);
 
-                    final DoublePoiEvent doublePoiEvent = new DoublePoiEvent();
-                    doublePoiEvent.setStartLocation(startLoc);
-                    doublePoiEvent.setEndLocation(endLoc);
-                    doublePoiEvent.setStartLatitude(startLatitude);
-                    doublePoiEvent.setStartLongitude(startLongitude);
-                    doublePoiEvent.setEndLatitude(endLatitude);
-                    doublePoiEvent.setEndLongitude(endLongitude);
-                    doublePoiEvent.setLabels(labels);
-                    doublePoiEvent.setTitle(etTitle.getText().toString());
-                    doublePoiEvent.setDesc(etDesc.getText().toString());
-                    doublePoiEvent.setStartTime(startDate);
-                    doublePoiEvent.setFinished(false);
+                    event = new SinglePoiEvent();
+                    event.setLocation(loc);
+                    event.setLatitude(latitude);
+                    event.setLongitude(longitude);
+                    event.setLabels(labels);
+                    event.setTitle(etTitle.getText().toString());
+                    event.setDesc(etDesc.getText().toString());
+                    event.setStartTime(startDate);
+                    event.setFinished(false);
 
                     //上传
                     new Thread() {
                         @Override
                         public void run() {
 
-                            doublePoiEvent.save(new SaveListener<String>() {
+                            event.save(new SaveListener<String>() {
                                 @Override
                                 public void done(String s, BmobException e) {
                                     if (e == null) {
-                                        ViewUtils.show(EditActivity.this, "提交成功");
+                                        ViewUtils.show(SingleEventActivity.this, "上传成功");
+                                        setResult(RESULT_OK, null);
                                         finish();
                                     } else {
-                                        ViewUtils.show(EditActivity.this, "提交失败" + e.getErrorCode());
+                                        ViewUtils.show(SingleEventActivity.this, "上传失败" + e.getErrorCode());
                                     }
-                                }
-                            });
-                            pbCommit.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    pbCommit.setVisibility(View.INVISIBLE);
                                 }
                             });
                         }
@@ -240,14 +211,7 @@ public class EditActivity extends BaseActivity {
         @Override
         public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
             address = regeocodeResult.getRegeocodeAddress().getFormatAddress();
-            Log.i(TAG, "address=" + address);
-            addressList.add(address);
-
-            counter++;
-            if (counter == 2) {
-                saveAddress();
-                counter = 0;
-            }
+            saveAddress();
         }
 
         @Override

@@ -36,10 +36,10 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/rl_btn"
+        android:id="@+id/rl_btn_double"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="#3a7e36"
+        android:background="#1c9607"
         android:gravity="center_vertical"
         android:visibility="invisible">
 
@@ -47,7 +47,7 @@
             android:id="@+id/rg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="80dp"
             android:orientation="horizontal">
 
             <RadioButton
@@ -68,7 +68,7 @@
         </RadioGroup>
 
         <ImageView
-            android:id="@+id/iv_finish"
+            android:id="@+id/iv_finish_double"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -76,6 +76,53 @@
             android:layout_marginTop="4dp"
             android:clickable="true"
             android:src="@mipmap/finish" />
+
+        <ImageView
+            android:id="@+id/iv_back_add_double"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="4dp"
+            android:clickable="true"
+            android:src="@mipmap/back_add" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_btn_single"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="#d60f0c"
+        android:gravity="center_vertical"
+        android:visibility="invisible">
+
+        <ImageView
+            android:id="@+id/iv_finish_single"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="4dp"
+            android:clickable="true"
+            android:src="@mipmap/finish" />
+
+        <ImageView
+            android:id="@+id/iv_back_add_single"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="4dp"
+            android:clickable="true"
+            android:src="@mipmap/back_add" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="添加一个位置"
+            android:textSize="16sp"
+            android:textColor="#fff"
+            android:layout_centerHorizontal="true"/>
 
     </RelativeLayout>
 
@@ -86,7 +133,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_gravity="bottom|right"
-        android:layout_margin="20dp"
+        android:layout_margin="30dp"
         android:clickable="true"
         android:src="@mipmap/plus" />
 
@@ -100,17 +147,53 @@
         android:src="@mipmap/hint"
         android:visibility="invisible" />
 
-    <ImageView
-        android:id="@+id/iv_commit_msg"
+    <TextView
+        android:id="@+id/tv_user_commit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_gravity="bottom|right"
-        android:layout_marginBottom="80dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginBottom="120dp"
+        android:layout_marginRight="30dp"
         android:clickable="true"
-        android:src="@mipmap/reminder" />
+        android:drawableLeft="@mipmap/reminder"
+        android:drawablePadding="10dp"
+        android:text="用户提交"
+        android:textColor="#000"
+        android:textSize="16sp"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/tv_add_double"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="170dp"
+        android:layout_marginRight="30dp"
+        android:clickable="true"
+        android:drawableLeft="@mipmap/reminder"
+        android:drawablePadding="10dp"
+        android:text="添加路段"
+        android:textColor="#000"
+        android:textSize="16sp"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/tv_add_single"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="220dp"
+        android:layout_marginRight="30dp"
+        android:clickable="true"
+        android:drawableLeft="@mipmap/reminder"
+        android:drawablePadding="10dp"
+        android:text="添加地点"
+        android:textColor="#000"
+        android:textSize="16sp"
+        android:visibility="invisible" />
 
 
 </RelativeLayout>

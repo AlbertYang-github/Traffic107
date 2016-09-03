@@ -8,7 +8,7 @@ import cn.bmob.v3.BmobObject;
 /**
  * Created by Yohann on 2016/8/25.
  */
-public class Event extends BmobObject implements Serializable {
+public class DoublePoiEvent extends BmobObject implements Serializable {
     private String startLocation;
     private String endLocation;
     private Double startLongitude;
@@ -20,13 +20,7 @@ public class Event extends BmobObject implements Serializable {
     private String desc;
     private Date startTime;
     private Date endTime;
-    private String username;
     private Boolean isFinished;
-    private String commStatus;
-
-    public void setCommStatus(String commStatus) {
-        this.commStatus = commStatus;
-    }
 
     public void setStartLocation(String startLocation) {
         this.startLocation = startLocation;
@@ -70,10 +64,6 @@ public class Event extends BmobObject implements Serializable {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public void setFinished(Boolean finished) {
@@ -124,15 +114,7 @@ public class Event extends BmobObject implements Serializable {
         return endTime;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
     public Boolean getFinished() {
         return isFinished;
-    }
-
-    public String getCommStatus() {
-        return commStatus;
     }
 }

@@ -11,7 +11,8 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.services.core.LatLonPoint;
 import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.Constants.Variable;
-import com.yohann.traffic107.common.bean.Event;
+import com.yohann.traffic107.common.bean.DoublePoiEvent;
+import com.yohann.traffic107.common.bean.SinglePoiEvent;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -40,21 +41,18 @@ public class NetUtils {
             @Override
             public void run() {
                 Variable.eventMap.clear();
-                BmobQuery<Event> query = new BmobQuery<>();
+                BmobQuery<DoublePoiEvent> query = new BmobQuery<>();
                 query.addWhereEqualTo("isFinished", false);
-                List<BmobQuery<Event>> list = new ArrayList<>();
-                list.add(new BmobQuery<Event>().addWhereEqualTo("commStatus", "审核成功"));
-                query.and(list);
 
-                query.findObjects(new FindListener<Event>() {
+                query.findObjects(new FindListener<DoublePoiEvent>() {
                     @Override
-                    public void done(List<Event> list, BmobException e) {
+                    public void done(List<DoublePoiEvent> list, BmobException e) {
                         if (e == null) {
                             if (list.size() == 0) {
                                 ViewUtils.show(context, "没有数据可加载");
                             } else {
-                                for (Event event : list) {
-                                    Variable.eventMap.put(event.getObjectId(), event);
+                                for (DoublePoiEvent doublePoiEvent : list) {
+                                    Variable.eventMap.put(doublePoiEvent.getObjectId(), doublePoiEvent);
                                 }
                                 ViewUtils.show(context, "加载了" + Variable.eventMap.size() + "条数据");
                                 drawPath();
@@ -68,30 +66,30 @@ public class NetUtils {
         }.start();
     }
 
-    public void loadUserMarker() {
+    public void loadSingleMarker() {
         //向服务器获取路况数据
         new Thread() {
             @Override
             public void run() {
-                Variable.eventMap.clear();
-                BmobQuery<Event> query = new BmobQuery<>();
+                Variable.eventSingleMap.clear();
+                BmobQuery<SinglePoiEvent> query = new BmobQuery<>();
                 query.addWhereEqualTo("isFinished", false);
-                List<BmobQuery<Event>> list = new ArrayList<>();
-                list.add(new BmobQuery<Event>().addWhereEqualTo("username", Variable.userName));
-                query.and(list);
 
-                query.findObjects(new FindListener<Event>() {
+                query.findObjects(new FindListener<SinglePoiEvent>() {
                     @Override
-                    public void done(List<Event> list, BmobException e) {
+                    public void done(List<SinglePoiEvent> list, BmobException e) {
                         if (e == null) {
                             if (list.size() == 0) {
                                 ViewUtils.show(context, "没有数据可加载");
                             } else {
-                                for (Event event : list) {
-                                    Variable.eventMap.put(event.getObjectId(), event);
+                                for (SinglePoiEvent singlePoiEvent : list) {
+                                    MarkerOptions markerOptions = new MarkerOptions();
+                                    Variable.eventSingleMap.put(singlePoiEvent.getObjectId(), singlePoiEvent);
+                                    initMarker(new LatLng(singlePoiEvent.getLatitude(), singlePoiEvent.getLongitude()),
+                                            R.layout.marker_single_layout, markerOptions);
+                                    aMap.addMarker(markerOptions);
                                 }
                                 ViewUtils.show(context, "加载了" + Variable.eventMap.size() + "条数据");
-                                drawPath();
                             }
                         } else {
                             ViewUtils.show(context, "数据加载失败 " + e.getErrorCode());
@@ -103,15 +101,15 @@ public class NetUtils {
     }
 
     public void drawPath() {
-        Iterator<Map.Entry<String, Event>> it = Variable.eventMap.entrySet().iterator();
+        Iterator<Map.Entry<String, DoublePoiEvent>> it = Variable.eventMap.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<String, Event> entry = it.next();
-            Event event = entry.getValue();
+            Map.Entry<String, DoublePoiEvent> entry = it.next();
+            DoublePoiEvent doublePoiEvent = entry.getValue();
 
-            Double startLatitude = event.getStartLatitude();
-            Double startLongitude = event.getStartLongitude();
-            Double endLatitude = event.getEndLatitude();
-            Double endLongitude = event.getEndLongitude();
+            Double startLatitude = doublePoiEvent.getStartLatitude();
+            Double startLongitude = doublePoiEvent.getStartLongitude();
+            Double endLatitude = doublePoiEvent.getEndLatitude();
+            Double endLongitude = doublePoiEvent.getEndLongitude();
 
             new MyRouteSearch(context, aMap).planPath(
                     new LatLonPoint(startLatitude, startLongitude),

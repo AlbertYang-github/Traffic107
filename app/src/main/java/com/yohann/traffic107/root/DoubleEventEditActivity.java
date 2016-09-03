@@ -17,7 +17,7 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.activity.BaseActivity;
-import com.yohann.traffic107.common.bean.Event;
+import com.yohann.traffic107.common.bean.DoublePoiEvent;
 import com.yohann.traffic107.utils.BmobUtils;
 import com.yohann.traffic107.utils.StringUtils;
 import com.yohann.traffic107.utils.ViewUtils;
@@ -30,7 +30,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import me.gujun.android.taggroup.TagGroup;
 
-public class EditActivity extends BaseActivity {
+public class DoubleEventEditActivity extends BaseActivity {
 
     private static final String TAG = "EditActivityInfo";
     private static int counter = 0;
@@ -55,7 +55,7 @@ public class EditActivity extends BaseActivity {
     private String startLoc;
     private String endLoc;
     private Date startDate;
-    private Event event;
+    private DoublePoiEvent event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,10 +149,10 @@ public class EditActivity extends BaseActivity {
             switch (v.getId()) {
                 //填写标签内容
                 case R.id.iv_add_labels:
-                    AlertDialog.Builder builder = new AlertDialog.Builder(EditActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(DoubleEventEditActivity.this);
                     final AlertDialog dialog = builder.create();
                     //将自定义布局设置给dialog
-                    View view = View.inflate(EditActivity.this, R.layout.labels_input, null);
+                    View view = View.inflate(DoubleEventEditActivity.this, R.layout.labels_input, null);
 
                     final EditText etLabel = (EditText) view.findViewById(R.id.et_label);
                     Button btnConfirm = (Button) view.findViewById(R.id.btn_confirm);
@@ -189,7 +189,7 @@ public class EditActivity extends BaseActivity {
                 case R.id.btn_finish:
                     String labels = StringUtils.getStringFromArrayList(labelList);
 
-                    event = new Event();
+                    event = new DoublePoiEvent();
                     event.setStartLocation(startLoc);
                     event.setEndLocation(endLoc);
                     event.setStartLatitude(startLatitude);
@@ -201,8 +201,6 @@ public class EditActivity extends BaseActivity {
                     event.setDesc(etDesc.getText().toString());
                     event.setStartTime(startDate);
                     event.setFinished(false);
-                    event.setCommStatus("审核成功");
-                    event.setUsername("root");
 
                     //上传
                     new Thread() {
@@ -213,11 +211,11 @@ public class EditActivity extends BaseActivity {
                                 @Override
                                 public void done(String s, BmobException e) {
                                     if (e == null) {
-                                        ViewUtils.show(EditActivity.this, "上传成功");
+                                        ViewUtils.show(DoubleEventEditActivity.this, "上传成功");
                                         setResult(RESULT_OK, null);
                                         finish();
                                     } else {
-                                        ViewUtils.show(EditActivity.this, "上传失败" + e.getErrorCode());
+                                        ViewUtils.show(DoubleEventEditActivity.this, "上传失败" + e.getErrorCode());
                                     }
                                 }
                             });
