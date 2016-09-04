@@ -17,8 +17,8 @@ import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.yohann.traffic107.R;
+import com.yohann.traffic107.common.activity.BaseActivity;
 import com.yohann.traffic107.common.bean.Event;
-import com.yohann.traffic107.common.bean.EventPoi;
 import com.yohann.traffic107.utils.BmobUtils;
 import com.yohann.traffic107.utils.StringUtils;
 import com.yohann.traffic107.utils.ViewUtils;
@@ -31,7 +31,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import me.gujun.android.taggroup.TagGroup;
 
-public class SingleEventEditActivity extends AppCompatActivity {
+public class SingleEventEditActivity extends BaseActivity {
     private static final String TAG = "SingleEventActivityInfo";
     private static int counter = 0;
 

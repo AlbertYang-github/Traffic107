@@ -1,12 +1,14 @@
 package com.yohann.traffic107.utils;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.services.core.LatLonPoint;
 import com.yohann.traffic107.R;
@@ -26,6 +28,7 @@ import cn.bmob.v3.listener.FindListener;
  * Created by Yohann on 2016/8/28.
  */
 public class NetUtils {
+    private static final String TAG = "NetUtilsInfo";
     private Context context;
     private AMap aMap;
 
@@ -114,5 +117,15 @@ public class NetUtils {
         tvLatitude.setText("纬度：" + latLng.latitude);
 
         markerOptions.position(latLng).icon(BitmapDescriptorFactory.fromView(view)).anchor(0, 1).visible(true);
+    }
+
+    public void addFlagMarker(ArrayList<LatLng> list) {
+        for (LatLng latLng : list) {
+            Log.i(TAG, "addFlagMarker: ");
+            View view = View.inflate(context, R.layout.marker_flag, null);
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(latLng).icon(BitmapDescriptorFactory.fromView(view)).anchor(0.5f, 0.5f).visible(true);
+            aMap.addMarker(markerOptions);
+        }
     }
 }

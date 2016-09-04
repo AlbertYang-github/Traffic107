@@ -6,11 +6,12 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.yohann.traffic107.R;
+import com.yohann.traffic107.common.activity.BaseActivity;
 import com.yohann.traffic107.utils.StringUtils;
 
 import me.gujun.android.taggroup.TagGroup;
 
-public class PersonDetailActivity extends AppCompatActivity {
+public class PersonDetailActivity extends BaseActivity {
 
     private TextView tvTime;
     private TextView tvLoc;

@@ -1,10 +1,11 @@
 package com.yohann.traffic107.common.activity;
 
+import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
