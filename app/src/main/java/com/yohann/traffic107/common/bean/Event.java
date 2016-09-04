@@ -11,6 +11,9 @@ import cn.bmob.v3.BmobObject;
 public class Event extends BmobObject implements Serializable {
     private String startLocation;
     private String endLocation;
+    private String location;
+    private Double longitude;
+    private Double latitude;
     private Double startLongitude;
     private Double endLongitude;
     private Double startLatitude;
@@ -20,8 +23,49 @@ public class Event extends BmobObject implements Serializable {
     private String desc;
     private Date startTime;
     private Date endTime;
+    private String username;
     private Boolean isFinished;
-    private
+    private String commStatus;
+
+    public String getCommStatus() {
+        return commStatus;
+    }
+
+    public void setCommStatus(String commStatus) {
+        this.commStatus = commStatus;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
 
     public void setStartLocation(String startLocation) {
         this.startLocation = startLocation;

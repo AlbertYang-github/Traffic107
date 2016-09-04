@@ -28,4 +28,9 @@
 
     </RelativeLayout>
 
+    <com.amap.api.maps.MapView
+        android:id="@+id/map_statistics"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></com.amap.api.maps.MapView>
+
 </LinearLayout>

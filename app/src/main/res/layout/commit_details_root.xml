@@ -72,33 +72,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
-                        android:text="起始点："
+                        android:text="地点："
                         android:textColor="#3b6087"
                         android:textSize="18sp" />
 
                     <TextView
-                        android:id="@+id/tv_start_Loc"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="hello" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="终止点："
-                        android:textColor="#3b6087"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/tv_end_loc"
+                        android:id="@+id/tv_loc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="hello" />
@@ -109,7 +88,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -120,13 +100,6 @@
                         android:textSize="18sp" />
 
                 </RelativeLayout>
-
-                <TextView
-                    android:id="@+id/tv_label_hint"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="hello" />
-
 
                 <me.gujun.android.taggroup.TagGroup
                     android:id="@+id/label_group"

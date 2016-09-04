@@ -13,6 +13,7 @@ import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.Constants.Variable;
 import com.yohann.traffic107.common.bean.Event;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,9 @@ public class NetUtils {
                 Variable.eventMap.clear();
                 BmobQuery<Event> query = new BmobQuery<>();
                 query.addWhereEqualTo("isFinished", false);
-
+                List<BmobQuery<Event>> list = new ArrayList<>();
+                list.add(new BmobQuery<Event>().addWhereEqualTo("commStatus", "审核成功"));
+                query.and(list);
                 query.findObjects(new FindListener<Event>() {
                     @Override
                     public void done(List<Event> list, BmobException e) {
@@ -70,20 +73,29 @@ public class NetUtils {
             Map.Entry<String, Event> entry = it.next();
             Event event = entry.getValue();
 
+            Double latitude = event.getLatitude();
+            Double longitude = event.getLongitude();
+
             Double startLatitude = event.getStartLatitude();
             Double startLongitude = event.getStartLongitude();
             Double endLatitude = event.getEndLatitude();
             Double endLongitude = event.getEndLongitude();
 
-            new MyRouteSearch(context, aMap).planPath(
-                    new LatLonPoint(startLatitude, startLongitude),
-                    new LatLonPoint(endLatitude, endLongitude), null);
-            MarkerOptions startOptions = new MarkerOptions();
-            MarkerOptions endOptions = new MarkerOptions();
-            initMarker(new LatLng(startLatitude, startLongitude), R.layout.marker_start_layout, startOptions);
-            initMarker(new LatLng(endLatitude, endLongitude), R.layout.marker_end_layout, endOptions);
-            aMap.addMarker(startOptions);
-            aMap.addMarker(endOptions);
+            if (latitude != null && longitude != null) {
+                MarkerOptions options = new MarkerOptions();
+                initMarker(new LatLng(latitude, longitude), R.layout.marker_single_layout, options);
+                aMap.addMarker(options);
+            } else {
+                new MyRouteSearch(context, aMap).planPath(
+                        new LatLonPoint(startLatitude, startLongitude),
+                        new LatLonPoint(endLatitude, endLongitude), null);
+                MarkerOptions startOptions = new MarkerOptions();
+                MarkerOptions endOptions = new MarkerOptions();
+                initMarker(new LatLng(startLatitude, startLongitude), R.layout.marker_start_layout, startOptions);
+                initMarker(new LatLng(endLatitude, endLongitude), R.layout.marker_end_layout, endOptions);
+                aMap.addMarker(startOptions);
+                aMap.addMarker(endOptions);
+            }
         }
     }
 

@@ -73,33 +73,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
-                        android:text="起始点："
+                        android:text="地点："
                         android:textColor="#3b6087"
                         android:textSize="18sp" />
 
                     <TextView
-                        android:id="@+id/tv_start_Loc_user"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="hello" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="终止点："
-                        android:textColor="#3b6087"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/tv_end_loc_user"
+                        android:id="@+id/tv_loc_user"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="hello" />

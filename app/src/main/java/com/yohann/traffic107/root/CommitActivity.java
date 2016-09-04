@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,6 +107,8 @@ public class CommitActivity extends BaseActivity {
             Event event = eventMap.get(key);
             String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getStartTime());
             tvTime.setText(time);
+            tvCommitStatus.setText(event.getCommStatus());
+            tvUsername.setText(event.getUsername());
             return view;
         }
     }
@@ -116,8 +119,6 @@ public class CommitActivity extends BaseActivity {
             @Override
             public void run() {
                 BmobQuery<Event> query = new BmobQuery<>();
-                query.addWhereEqualTo("commStatus", "审核中");
-
                 query.findObjects(new FindListener<Event>() {
                     @Override
                     public void done(List<Event> list, BmobException e) {
@@ -126,8 +127,11 @@ public class CommitActivity extends BaseActivity {
                                 ViewUtils.show(CommitActivity.this, "没有数据可加载");
                             } else {
                                 for (Event event : list) {
-                                    keyList.add(event.getObjectId());
-                                    eventMap.put(event.getObjectId(), event);
+                                    String username = event.getUsername();
+                                    if (!TextUtils.isEmpty(username)) {
+                                        keyList.add(event.getObjectId());
+                                        eventMap.put(event.getObjectId(), event);
+                                    }
                                 }
                                 handler.sendEmptyMessage(SHOW);
                                 ViewUtils.show(CommitActivity.this, "加载了" + list.size() + "条数据");

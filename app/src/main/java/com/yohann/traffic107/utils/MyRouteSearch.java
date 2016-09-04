@@ -9,6 +9,7 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.route.BusRouteResult;
 import com.amap.api.services.route.DrivePath;
 import com.amap.api.services.route.DriveRouteResult;
+import com.amap.api.services.route.DriveStep;
 import com.amap.api.services.route.RouteSearch;
 import com.amap.api.services.route.WalkRouteResult;
 
@@ -45,6 +46,10 @@ public class MyRouteSearch implements RouteSearch.OnRouteSearchListener {
         Log.i(TAG, "onDriveRouteSearched: 触发了路径规划监听器");
         List<DrivePath> paths = driveRouteResult.getPaths();
         DrivePath drivePath = paths.get(0);
+        List<DriveStep> steps = drivePath.getSteps();
+        DriveStep driveStep = steps.get(0);
+        List<LatLonPoint> points = driveStep.getPolyline();
+        Log.i(TAG, "onDriveRouteSearched: " + points);
         DrivingRouteOverlay drivingRouteOverlay = new DrivingRouteOverlay(context, aMap, drivePath,
                 driveRouteResult.getStartPos(), driveRouteResult.getTargetPos());
         drivingRouteOverlay.addToMap();

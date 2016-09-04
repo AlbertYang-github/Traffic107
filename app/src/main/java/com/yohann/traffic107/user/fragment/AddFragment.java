@@ -37,22 +37,14 @@ public class AddFragment extends Fragment {
     private ImageView ivMenu;
     private MapView mapView;
     private AMap aMap;
-    private UiSettings uiSettings;
-    private RadioButton rbStart;
-    private RadioButton rbEnd;
     private ImageView ivFinishAdd;
     private NetUtils netUtils;
 
-    private Double startLongitude;
-    private Double endLongitude;
-    private Double startLatitude;
-    private Double endLatitude;
+    private Double longitude;
+    private Double latitude;
 
-    private Marker startMarker;
-    private Marker endMarker;
+    private Marker marker;
 
-    ArrayList<Marker> markerStartList = new ArrayList<>();
-    ArrayList<Marker> markerEndList = new ArrayList<>();
     private LocationInit locationInit;
 
     @Override
@@ -103,12 +95,8 @@ public class AddFragment extends Fragment {
     private void init(View view) {
         ivMenu = (ImageView) view.findViewById(R.id.iv_menu_add);
         mapView = (MapView) view.findViewById(R.id.map_add);
-        rbStart = (RadioButton) view.findViewById(R.id.rbtn_start_add);
-        rbEnd = (RadioButton) view.findViewById(R.id.rbtn_end_add);
         ivFinishAdd = (ImageView) view.findViewById(R.id.iv_finish_add);
         aMap = mapView.getMap();
-        uiSettings = aMap.getUiSettings();
-        uiSettings.setZoomControlsEnabled(false);
         netUtils = new NetUtils(activity, aMap);
         locationInit = new LocationInit(activity, aMap);
         locationInit.init();
@@ -116,15 +104,13 @@ public class AddFragment extends Fragment {
         ivFinishAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (startLongitude == null || startLatitude == null || endLongitude == null || endLatitude == null) {
-                    ViewUtils.show(activity, "请选择起始点和终止点");
+                if (latitude == null || longitude == null) {
+                    ViewUtils.show(activity, "请选择路况地点");
                 } else {
                     Intent intent = new Intent(activity, EditActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putDouble("startLongitude", startLongitude);
-                    bundle.putDouble("startLatitude", startLatitude);
-                    bundle.putDouble("endLongitude", endLongitude);
-                    bundle.putDouble("endLatitude", endLatitude);
+                    bundle.putDouble("longitude", longitude);
+                    bundle.putDouble("latitude", latitude);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }
@@ -136,43 +122,15 @@ public class AddFragment extends Fragment {
             public void onMapLongClick(LatLng latLng) {
                 MarkerOptions markerOptions = new MarkerOptions();
 
-                //起始点
-                if (rbStart.isChecked()) {
-                    startLongitude = latLng.longitude;
-                    startLatitude = latLng.latitude;
-
-                    netUtils.initMarker(latLng, R.layout.marker_start_layout, markerOptions);
-                    if (markerStartList.size() == 0) {
-                        //第一次添加
-                        startMarker = aMap.addMarker(markerOptions);
-                        markerStartList.add(startMarker);
-                    } else {
-                        //非第一次添加
-                        startMarker = aMap.addMarker(markerOptions);
-                        Marker markerOld = markerStartList.get(0);
-                        markerOld.remove();
-                        markerStartList.clear();
-                        markerStartList.add(startMarker);
-                    }
-                }
-
-                //终止点
-                if (rbEnd.isChecked()) {
-                    endLongitude = latLng.longitude;
-                    endLatitude = latLng.latitude;
-
-                    netUtils.initMarker(latLng, R.layout.marker_end_layout, markerOptions);
-                    if (markerEndList.size() == 0) {
-                        endMarker = aMap.addMarker(markerOptions);
-                        markerEndList.add(startMarker);
-                    } else {
-                        //非第一次添加
-                        endMarker = aMap.addMarker(markerOptions);
-                        Marker markerOld = markerEndList.get(0);
-                        markerOld.remove();
-                        markerEndList.clear();
-                        markerEndList.add(endMarker);
-                    }
+                longitude = latLng.longitude;
+                latitude = latLng.latitude;
+                if (marker == null) {
+                    netUtils.initMarker(latLng, R.layout.marker_single_layout, markerOptions);
+                    marker = aMap.addMarker(markerOptions);
+                } else {
+                    marker.remove();
+                    netUtils.initMarker(latLng, R.layout.marker_single_layout, markerOptions);
+                    marker = aMap.addMarker(markerOptions);
                 }
             }
         });

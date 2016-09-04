@@ -200,6 +200,7 @@ public class DoubleEventEditActivity extends BaseActivity {
                     event.setTitle(etTitle.getText().toString());
                     event.setDesc(etDesc.getText().toString());
                     event.setStartTime(startDate);
+                    event.setCommStatus("审核成功");
                     event.setFinished(false);
 
                     //上传

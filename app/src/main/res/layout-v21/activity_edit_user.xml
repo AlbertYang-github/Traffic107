@@ -72,32 +72,12 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="起始点："
+                        android:text="地点："
                         android:textColor="#3b6087"
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/et_start_Loc"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="终止点："
-                        android:textColor="#3b6087"
-                        android:textSize="18sp" />
-
-                    <EditText
-                        android:id="@+id/et_end_Loc"
+                        android:id="@+id/et_loc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 

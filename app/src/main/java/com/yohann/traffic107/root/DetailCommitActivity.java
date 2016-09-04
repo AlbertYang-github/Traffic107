@@ -22,8 +22,7 @@ import me.gujun.android.taggroup.TagGroup;
 
 public class DetailCommitActivity extends BaseActivity {
     private TextView tvTime;
-    private TextView tvStartLoc;
-    private TextView tvEndLoc;
+    private TextView tvLoc;
     private TagGroup labelGroup;
     private TextView tvTitle;
     private TextView tvDesc;
@@ -42,8 +41,7 @@ public class DetailCommitActivity extends BaseActivity {
 
     private void init() {
         tvTime = (TextView) findViewById(R.id.tv_time);
-        tvStartLoc = (TextView) findViewById(R.id.tv_start_Loc);
-        tvEndLoc = (TextView) findViewById(R.id.tv_end_loc);
+        tvLoc = (TextView) findViewById(R.id.tv_loc);
         labelGroup = (TagGroup) findViewById(R.id.label_group);
         tvTitle = (TextView) findViewById(R.id.tv_title);
         tvDesc = (TextView) findViewById(R.id.tv_desc);
@@ -64,10 +62,10 @@ public class DetailCommitActivity extends BaseActivity {
         String[] labels = StringUtils.getArrayFromString(event.getLabels());
         labelGroup.setTags(labels);
         tvTime.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getStartTime()));
-        tvStartLoc.setText(event.getStartLocation());
-        tvEndLoc.setText(event.getEndLocation());
+        tvLoc.setText(event.getLocation());
         tvTitle.setText(event.getTitle());
         tvDesc.setText(event.getDesc());
+        tvCommitStatus.setText(event.getCommStatus());
     }
 
     class MyOnClickListener implements View.OnClickListener {
@@ -82,7 +80,7 @@ public class DetailCommitActivity extends BaseActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Event event = new Event();
-
+                            event.setCommStatus("审核成功");
                             event.update(objectId, new UpdateListener() {
                                 @Override
                                 public void done(BmobException e) {
@@ -112,6 +110,7 @@ public class DetailCommitActivity extends BaseActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Event event = new Event();
+                            event.setCommStatus("审核失败");
                             event.update(objectId, new UpdateListener() {
                                 @Override
                                 public void done(BmobException e) {

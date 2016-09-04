@@ -9,9 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.MapView;
 import com.yohann.traffic107.R;
 import com.yohann.traffic107.user.activity.HomeActivity;
 import com.yohann.traffic107.utils.BmobUtils;
+import com.yohann.traffic107.utils.LocationInit;
 
 /**
  * Created by Yohann on 2016/8/28.
@@ -19,6 +22,9 @@ import com.yohann.traffic107.utils.BmobUtils;
 public class StatisticsFragment extends Fragment {
     private HomeActivity activity;
     private ImageView ivMenu;
+    private MapView mapView;
+    private AMap aMap;
+    private LocationInit locationInit;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,11 +38,41 @@ public class StatisticsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_statistics, null);
         init(view);
+        mapView.onCreate(savedInstanceState);
+        locationInit.init();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
     }
 
     private void init(View view) {
         ivMenu = (ImageView) view.findViewById(R.id.iv_menu_statistics);
+        mapView = (MapView) view.findViewById(R.id.map_statistics);
+        aMap = mapView.getMap();
+        aMap.setMapType(AMap.MAP_TYPE_NIGHT);
+        locationInit = new LocationInit(activity, aMap);
     }
 
     @Override

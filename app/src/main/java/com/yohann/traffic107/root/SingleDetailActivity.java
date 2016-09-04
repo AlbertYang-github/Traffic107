@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.Constants.Variable;
 import com.yohann.traffic107.common.activity.BaseActivity;
+import com.yohann.traffic107.common.bean.Event;
 import com.yohann.traffic107.utils.StringUtils;
 import com.yohann.traffic107.utils.ViewUtils;
 
@@ -56,16 +57,16 @@ public class SingleDetailActivity extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         if (TextUtils.isEmpty(Variable.eventId)) {
                         } else {
-                            SinglePoiEvent singlePoiEvent = new SinglePoiEvent();
-                            singlePoiEvent.setFinished(true);
-                            singlePoiEvent.setEndTime(new Date(System.currentTimeMillis()));
+                            Event event = new Event();
+                            event.setFinished(true);
+                            event.setEndTime(new Date(System.currentTimeMillis()));
 
-                            singlePoiEvent.update(Variable.eventId, new UpdateListener() {
+                            event.update(Variable.eventId, new UpdateListener() {
                                 @Override
                                 public void done(BmobException e) {
                                     if (e == null) {
                                         ViewUtils.show(SingleDetailActivity.this, "删除成功");
-                                        Variable.eventSingleMap.remove(Variable.eventSingleId);
+                                        Variable.eventMap.remove(Variable.eventMap);
                                         setResult(RESULT_OK, null);
                                         finish();
                                     } else {

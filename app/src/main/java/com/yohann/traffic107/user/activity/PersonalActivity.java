@@ -62,12 +62,11 @@ public class PersonalActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.i(TAG, "onItemClick: position = " + position);
                 Event event = commitList.get(position - 1);
-                Intent intent = new Intent(PersonalActivity.this, DetailActivity.class);
+                Intent intent = new Intent(PersonalActivity.this, PersonDetailActivity.class);
                 Bundle bundle = new Bundle();
                 String startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getStartTime());
                 bundle.putString("startTime", startTime);
-                bundle.putString("startLoc", event.getStartLocation());
-                bundle.putString("endLoc", event.getEndLocation());
+                bundle.putString("loc", event.getLocation());
                 bundle.putString("labels", event.getLabels());
                 bundle.putString("title", event.getTitle());
                 bundle.putString("desc", event.getDesc());
@@ -106,6 +105,7 @@ public class PersonalActivity extends BaseActivity {
             tvTitle.setText(event.getTitle());
             String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getStartTime());
             tvTime.setText(time);
+            tvStatus.setText(event.getCommStatus());
             return view;
         }
     }

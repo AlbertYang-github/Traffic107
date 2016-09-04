@@ -180,26 +180,46 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
             Map.Entry<String, Event> entry = it.next();
             Variable.eventId = entry.getKey();
             Event event = entry.getValue();
+
+            Double latitude = event.getLatitude();
+            Double longitude = event.getLongitude();
+            if (latitude != null && longitude != null) {
+                if (latitude == latLng.latitude && latLng.longitude == longitude) {
+                    Intent intent = new Intent(activity, com.yohann.traffic107.user.activity.SingleDetailActivity.class);
+                    Bundle bundle = new Bundle();
+                    String startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getStartTime());
+                    bundle.putString("startTime", startTime);
+                    bundle.putString("loc", event.getLocation());
+                    bundle.putString("labels", event.getLabels());
+                    bundle.putString("title", event.getTitle());
+                    bundle.putString("desc", event.getDesc());
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, Constants.WATCH);
+                    break;
+                }
+            }
+
             Double startLatitude = event.getStartLatitude();
             Double startLongitude = event.getStartLongitude();
             Double endLatitude = event.getEndLatitude();
             Double endLongitude = event.getEndLongitude();
 
-            if ((latLng.latitude == startLatitude && latLng.longitude == startLongitude)
-                    || (latLng.latitude == endLatitude && latLng.longitude == endLongitude)) {
-
-                Intent intent = new Intent(activity, DetailActivity.class);
-                Bundle bundle = new Bundle();
-                String startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getStartTime());
-                bundle.putString("startTime", startTime);
-                bundle.putString("startLoc", event.getStartLocation());
-                bundle.putString("endLoc", event.getEndLocation());
-                bundle.putString("labels", event.getLabels());
-                bundle.putString("title", event.getTitle());
-                bundle.putString("desc", event.getDesc());
-                intent.putExtras(bundle);
-                startActivityForResult(intent, Constants.WATCH);
-                break;
+            if (startLatitude != null && startLongitude != null && endLatitude != null && endLongitude != null) {
+                if ((latLng.latitude == startLatitude && latLng.longitude == startLongitude)
+                        || (latLng.latitude == endLatitude && latLng.longitude == endLongitude)) {
+                    Intent intent = new Intent(activity, DetailActivity.class);
+                    Bundle bundle = new Bundle();
+                    String startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getStartTime());
+                    bundle.putString("startTime", startTime);
+                    bundle.putString("startLoc", event.getStartLocation());
+                    bundle.putString("endLoc", event.getEndLocation());
+                    bundle.putString("labels", event.getLabels());
+                    bundle.putString("title", event.getTitle());
+                    bundle.putString("desc", event.getDesc());
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, Constants.WATCH);
+                    break;
+                }
             }
         }
 

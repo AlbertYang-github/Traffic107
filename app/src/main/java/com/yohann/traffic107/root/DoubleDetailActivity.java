@@ -34,7 +34,7 @@ public class DoubleDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail_single);
+        setContentView(R.layout.activity_detail_double);
         init();
         loadData();
     }

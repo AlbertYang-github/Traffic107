@@ -18,6 +18,7 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.bean.Event;
+import com.yohann.traffic107.common.bean.EventPoi;
 import com.yohann.traffic107.utils.BmobUtils;
 import com.yohann.traffic107.utils.StringUtils;
 import com.yohann.traffic107.utils.ViewUtils;
@@ -30,7 +31,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import me.gujun.android.taggroup.TagGroup;
 
-public class SingleEventActivity extends AppCompatActivity {
+public class SingleEventEditActivity extends AppCompatActivity {
     private static final String TAG = "SingleEventActivityInfo";
     private static int counter = 0;
 
@@ -118,6 +119,7 @@ public class SingleEventActivity extends AppCompatActivity {
 
     public void saveAddress() {
         etLoc.setText(address);
+        loc = address;
     }
 
     /**
@@ -131,10 +133,10 @@ public class SingleEventActivity extends AppCompatActivity {
             switch (v.getId()) {
                 //填写标签内容
                 case R.id.iv_add_labels:
-                    AlertDialog.Builder builder = new AlertDialog.Builder(SingleEventActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SingleEventEditActivity.this);
                     final AlertDialog dialog = builder.create();
                     //将自定义布局设置给dialog
-                    View view = View.inflate(SingleEventActivity.this, R.layout.labels_input, null);
+                    View view = View.inflate(SingleEventEditActivity.this, R.layout.labels_input, null);
 
                     final EditText etLabel = (EditText) view.findViewById(R.id.et_label);
                     Button btnConfirm = (Button) view.findViewById(R.id.btn_confirm);
@@ -179,22 +181,28 @@ public class SingleEventActivity extends AppCompatActivity {
                     event.setTitle(etTitle.getText().toString());
                     event.setDesc(etDesc.getText().toString());
                     event.setStartTime(startDate);
+                    event.setCommStatus("审核成功");
                     event.setFinished(false);
 
                     //上传
                     new Thread() {
                         @Override
                         public void run() {
+//                            eventPoi.save(new SaveListener<String>() {
+//                                @Override
+//                                public void done(String s, BmobException e) {
+//                                }
+//                            });
 
                             event.save(new SaveListener<String>() {
                                 @Override
                                 public void done(String s, BmobException e) {
                                     if (e == null) {
-                                        ViewUtils.show(SingleEventActivity.this, "上传成功");
+                                        ViewUtils.show(SingleEventEditActivity.this, "上传成功");
                                         setResult(RESULT_OK, null);
                                         finish();
                                     } else {
-                                        ViewUtils.show(SingleEventActivity.this, "上传失败" + e.getErrorCode());
+                                        ViewUtils.show(SingleEventEditActivity.this, "上传失败" + e.getErrorCode());
                                     }
                                 }
                             });

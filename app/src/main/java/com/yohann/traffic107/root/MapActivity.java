@@ -93,7 +93,6 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
         init();
         mapView.onCreate(savedInstanceState);
         netUtils.loadMarker();
-        netUtils.loadSingleMarker();
     }
 
 
@@ -254,28 +253,49 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
             Map.Entry<String, Event> entry = it.next();
             Variable.eventId = entry.getKey();
             Event event = entry.getValue();
+
+            Double latitude = event.getLatitude();
+            Double longitude = event.getLongitude();
+            if (latitude != null && longitude != null) {
+                if (latitude == latLng.latitude && latLng.longitude == longitude) {
+                    Log.i(TAG, "onMarkerClick: single");
+                    Intent intent = new Intent(MapActivity.this, SingleDetailActivity.class);
+                    Bundle bundle = new Bundle();
+                    String startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getStartTime());
+                    bundle.putString("startTime", startTime);
+                    bundle.putString("loc", event.getLocation());
+                    bundle.putString("labels", event.getLabels());
+                    bundle.putString("title", event.getTitle());
+                    bundle.putString("desc", event.getDesc());
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, Constants.WATCH);
+                    break;
+                }
+            }
+
             Double startLatitude = event.getStartLatitude();
             Double startLongitude = event.getStartLongitude();
             Double endLatitude = event.getEndLatitude();
             Double endLongitude = event.getEndLongitude();
 
-            if ((latLng.latitude == startLatitude && latLng.longitude == startLongitude)
-                    || (latLng.latitude == endLatitude && latLng.longitude == endLongitude)) {
-                isDouble = true;
-                Intent intent = new Intent(MapActivity.this, DoubleDetailActivity.class);
-                Bundle bundle = new Bundle();
-                String startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getStartTime());
-                bundle.putString("startTime", startTime);
-                bundle.putString("startLoc", event.getStartLocation());
-                bundle.putString("endLoc", event.getEndLocation());
-                bundle.putString("labels", event.getLabels());
-                bundle.putString("title", event.getTitle());
-                bundle.putString("desc", event.getDesc());
-                intent.putExtras(bundle);
-                startActivityForResult(intent, Constants.WATCH);
-                break;
+            if (startLatitude != null && startLongitude != null && endLatitude != null && endLongitude != null) {
+                if ((latLng.latitude == startLatitude && latLng.longitude == startLongitude)
+                        || (latLng.latitude == endLatitude && latLng.longitude == endLongitude)) {
+                    Log.i(TAG, "onMarkerClick: double");
+                    Intent intent = new Intent(MapActivity.this, DoubleDetailActivity.class);
+                    Bundle bundle = new Bundle();
+                    String startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getStartTime());
+                    bundle.putString("startTime", startTime);
+                    bundle.putString("startLoc", event.getStartLocation());
+                    bundle.putString("endLoc", event.getEndLocation());
+                    bundle.putString("labels", event.getLabels());
+                    bundle.putString("title", event.getTitle());
+                    bundle.putString("desc", event.getDesc());
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, Constants.WATCH);
+                    break;
+                }
             }
-
         }
 
         return true;
@@ -409,7 +429,7 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
                         ViewUtils.show(MapActivity.this, "请添加一个位置");
                     } else {
                         rlBtnSingle.setVisibility(View.INVISIBLE);
-                        Intent intent = new Intent(MapActivity.this, SingleEventActivity.class);
+                        Intent intent = new Intent(MapActivity.this, SingleEventEditActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putDouble("longitude", longitude);
                         bundle.putDouble("latitude", latitude);
@@ -439,7 +459,6 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
                 case R.id.iv_flush_root:
                     aMap.clear();
                     netUtils.loadMarker();
-                    netUtils.loadSingleMarker();
                     break;
             }
         }

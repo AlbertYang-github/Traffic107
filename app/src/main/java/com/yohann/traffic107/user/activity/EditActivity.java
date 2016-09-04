@@ -17,6 +17,7 @@ import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.yohann.traffic107.R;
+import com.yohann.traffic107.common.Constants.Variable;
 import com.yohann.traffic107.common.activity.BaseActivity;
 import com.yohann.traffic107.common.bean.Event;
 import com.yohann.traffic107.utils.BmobUtils;
@@ -36,8 +37,7 @@ public class EditActivity extends BaseActivity {
     private static final String TAG = "EditActivityInfo";
     private static int counter = 0;
 
-    private EditText etStartLoc;
-    private EditText etEndLoc;
+    private EditText etLoc;
     private EditText etTitle;
     private EditText etDesc;
     private ImageView ivAddLabels;
@@ -46,17 +46,13 @@ public class EditActivity extends BaseActivity {
     private TextView tvTime;
     private ProgressBar pbCommit;
     private Button btnCommit;
-    private ArrayList<String> addressList;
     private ArrayList<String> labelList;
     private GeocodeSearch geocodeSearch;
     private String address;
-    private Double startLongitude;
-    private Double startLatitude;
-    private Double endLongitude;
-    private Double endLatitude;
-    private String startLoc;
-    private String endLoc;
     private Date startDate;
+    private double latitude;
+    private double longitude;
+    private String loc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +66,7 @@ public class EditActivity extends BaseActivity {
      * 初始化
      */
     private void init() {
-        etStartLoc = (EditText) findViewById(R.id.et_start_Loc);
-        etEndLoc = (EditText) findViewById(R.id.et_end_Loc);
+        etLoc = (EditText) findViewById(R.id.et_loc);
         ivAddLabels = (ImageView) findViewById(R.id.iv_add_labels);
         tagGroup = (TagGroup) findViewById(R.id.label_group);
         tvLabelHint = (TextView) findViewById(R.id.tv_label_hint);
@@ -82,7 +77,6 @@ public class EditActivity extends BaseActivity {
         pbCommit = (ProgressBar) findViewById(R.id.pb_commit);
 
         geocodeSearch = new GeocodeSearch(this);
-        addressList = new ArrayList<>();
 
         //装载标签
         labelList = new ArrayList<>();
@@ -116,16 +110,10 @@ public class EditActivity extends BaseActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
-        startLongitude = bundle.getDouble("startLongitude");
-        startLatitude = bundle.getDouble("startLatitude");
-        endLongitude = bundle.getDouble("endLongitude");
-        endLatitude = bundle.getDouble("endLatitude");
+        latitude = bundle.getDouble("latitude");
+        longitude = bundle.getDouble("longitude");
 
-        Log.i(TAG, "startLongitude" + startLongitude + "startLatitude" +
-                startLatitude + "endLongitude" + endLongitude + "endLatitude" + endLatitude);
-
-        getAddress(startLatitude, startLongitude);
-        getAddress(endLatitude, endLongitude);
+        getAddress(latitude, longitude);
     }
 
     public void getAddress(double latitude, double longitude) {
@@ -134,11 +122,8 @@ public class EditActivity extends BaseActivity {
     }
 
     public void saveAddress() {
-        startLoc = addressList.get(0);
-        endLoc = addressList.get(1);
-        addressList.clear();
-        etStartLoc.setText(startLoc);
-        etEndLoc.setText(endLoc);
+        loc = address;
+        etLoc.setText(loc);
     }
 
     /**
@@ -194,16 +179,15 @@ public class EditActivity extends BaseActivity {
                     String labels = StringUtils.getStringFromArrayList(labelList);
 
                     final Event event = new Event();
-                    event.setStartLocation(startLoc);
-                    event.setEndLocation(endLoc);
-                    event.setStartLatitude(startLatitude);
-                    event.setStartLongitude(startLongitude);
-                    event.setEndLatitude(endLatitude);
-                    event.setEndLongitude(endLongitude);
+                    event.setLocation(loc);
+                    event.setLatitude(latitude);
+                    event.setLongitude(longitude);
                     event.setLabels(labels);
                     event.setTitle(etTitle.getText().toString());
                     event.setDesc(etDesc.getText().toString());
                     event.setStartTime(startDate);
+                    event.setCommStatus("审核中");
+                    event.setUsername(Variable.userName);
                     event.setFinished(false);
 
                     //上传
@@ -240,14 +224,7 @@ public class EditActivity extends BaseActivity {
         @Override
         public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
             address = regeocodeResult.getRegeocodeAddress().getFormatAddress();
-            Log.i(TAG, "address=" + address);
-            addressList.add(address);
-
-            counter++;
-            if (counter == 2) {
-                saveAddress();
-                counter = 0;
-            }
+            saveAddress();
         }
 
         @Override

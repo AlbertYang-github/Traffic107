@@ -38,46 +38,9 @@
 
     </RelativeLayout>
 
-    <FrameLayout
+    <com.amap.api.maps.MapView
+        android:id="@+id/map_add"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.amap.api.maps.MapView
-            android:id="@+id/map_add"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></com.amap.api.maps.MapView>
-
-        <RelativeLayout
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:orientation="vertical">
-
-            <RadioGroup
-                android:id="@+id/rg_add"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:orientation="vertical">
-
-                <RadioButton
-                    android:id="@+id/rbtn_start_add"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="起始点"
-                    android:textColor="#f00" />
-
-                <RadioButton
-                    android:id="@+id/rbtn_end_add"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="终止点"
-                    android:textColor="#f00" />
-
-            </RadioGroup>
-
-        </RelativeLayout>
-
-    </FrameLayout>
+        android:layout_height="match_parent"></com.amap.api.maps.MapView>
 
 </LinearLayout>
