@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.Constants.Variable;
 import com.yohann.traffic107.common.activity.BaseActivity;
-import com.yohann.traffic107.common.bean.DoublePoiEvent;
+import com.yohann.traffic107.common.bean.Event;
 import com.yohann.traffic107.utils.ViewUtils;
 
 import java.text.SimpleDateFormat;
@@ -31,7 +31,7 @@ public class PersonalActivity extends BaseActivity {
     private static final int SHOW = 1;
 
     private ListView lvCommitData;
-    private List<DoublePoiEvent> commitList;
+    private List<Event> commitList;
 
     private Handler handler = new Handler() {
         @Override
@@ -61,16 +61,16 @@ public class PersonalActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.i(TAG, "onItemClick: position = " + position);
-                DoublePoiEvent doublePoiEvent = commitList.get(position - 1);
+                Event event = commitList.get(position - 1);
                 Intent intent = new Intent(PersonalActivity.this, DetailActivity.class);
                 Bundle bundle = new Bundle();
-                String startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(doublePoiEvent.getStartTime());
+                String startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getStartTime());
                 bundle.putString("startTime", startTime);
-                bundle.putString("startLoc", doublePoiEvent.getStartLocation());
-                bundle.putString("endLoc", doublePoiEvent.getEndLocation());
-                bundle.putString("labels", doublePoiEvent.getLabels());
-                bundle.putString("title", doublePoiEvent.getTitle());
-                bundle.putString("desc", doublePoiEvent.getDesc());
+                bundle.putString("startLoc", event.getStartLocation());
+                bundle.putString("endLoc", event.getEndLocation());
+                bundle.putString("labels", event.getLabels());
+                bundle.putString("title", event.getTitle());
+                bundle.putString("desc", event.getDesc());
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -102,9 +102,9 @@ public class PersonalActivity extends BaseActivity {
             TextView tvTime = (TextView) view.findViewById(R.id.tv_time_commit);
             TextView tvStatus = (TextView) view.findViewById(R.id.tv_status_commit);
 
-            DoublePoiEvent doublePoiEvent = commitList.get(position);
-            tvTitle.setText(doublePoiEvent.getTitle());
-            String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(doublePoiEvent.getStartTime());
+            Event event = commitList.get(position);
+            tvTitle.setText(event.getTitle());
+            String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getStartTime());
             tvTime.setText(time);
             return view;
         }
@@ -115,18 +115,18 @@ public class PersonalActivity extends BaseActivity {
         new Thread() {
             @Override
             public void run() {
-                BmobQuery<DoublePoiEvent> query = new BmobQuery<>();
+                BmobQuery<Event> query = new BmobQuery<>();
                 query.addWhereEqualTo("username", username);
 
-                query.findObjects(new FindListener<DoublePoiEvent>() {
+                query.findObjects(new FindListener<Event>() {
                     @Override
-                    public void done(List<DoublePoiEvent> list, BmobException e) {
+                    public void done(List<Event> list, BmobException e) {
                         if (e == null) {
                             if (list.size() == 0) {
                                 ViewUtils.show(PersonalActivity.this, "没有数据可加载");
                             } else {
-                                for (DoublePoiEvent doublePoiEvent : list) {
-                                    commitList.add(doublePoiEvent);
+                                for (Event event : list) {
+                                    commitList.add(event);
                                 }
                                 handler.sendEmptyMessage(SHOW);
                                 ViewUtils.show(PersonalActivity.this, "加载了" + list.size() + "条数据");

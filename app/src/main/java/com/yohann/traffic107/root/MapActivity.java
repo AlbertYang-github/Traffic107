@@ -21,8 +21,7 @@ import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.Constants.Constants;
 import com.yohann.traffic107.common.Constants.Variable;
 import com.yohann.traffic107.common.activity.BaseActivity;
-import com.yohann.traffic107.common.bean.DoublePoiEvent;
-import com.yohann.traffic107.common.bean.SinglePoiEvent;
+import com.yohann.traffic107.common.bean.Event;
 import com.yohann.traffic107.utils.BmobUtils;
 import com.yohann.traffic107.utils.LocationInit;
 import com.yohann.traffic107.utils.NetUtils;
@@ -84,6 +83,7 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
     private Animation animEditSingleOpen;
     private Animation animEditSingleClose;
     private String editflag;
+    private boolean isDouble;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -249,55 +249,33 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
 
         LatLng latLng = marker.getPosition();
 
-        Iterator<Map.Entry<String, DoublePoiEvent>> it = Variable.eventMap.entrySet().iterator();
+        Iterator<Map.Entry<String, Event>> it = Variable.eventMap.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<String, DoublePoiEvent> entry = it.next();
+            Map.Entry<String, Event> entry = it.next();
             Variable.eventId = entry.getKey();
-            DoublePoiEvent doublePoiEvent = entry.getValue();
-            Double startLatitude = doublePoiEvent.getStartLatitude();
-            Double startLongitude = doublePoiEvent.getStartLongitude();
-            Double endLatitude = doublePoiEvent.getEndLatitude();
-            Double endLongitude = doublePoiEvent.getEndLongitude();
+            Event event = entry.getValue();
+            Double startLatitude = event.getStartLatitude();
+            Double startLongitude = event.getStartLongitude();
+            Double endLatitude = event.getEndLatitude();
+            Double endLongitude = event.getEndLongitude();
 
             if ((latLng.latitude == startLatitude && latLng.longitude == startLongitude)
                     || (latLng.latitude == endLatitude && latLng.longitude == endLongitude)) {
-
-                Intent intent = new Intent(MapActivity.this, DetailActivity.class);
+                isDouble = true;
+                Intent intent = new Intent(MapActivity.this, DoubleDetailActivity.class);
                 Bundle bundle = new Bundle();
-                String startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(doublePoiEvent.getStartTime());
+                String startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getStartTime());
                 bundle.putString("startTime", startTime);
-                bundle.putString("startLoc", doublePoiEvent.getStartLocation());
-                bundle.putString("endLoc", doublePoiEvent.getEndLocation());
-                bundle.putString("labels", doublePoiEvent.getLabels());
-                bundle.putString("title", doublePoiEvent.getTitle());
-                bundle.putString("desc", doublePoiEvent.getDesc());
+                bundle.putString("startLoc", event.getStartLocation());
+                bundle.putString("endLoc", event.getEndLocation());
+                bundle.putString("labels", event.getLabels());
+                bundle.putString("title", event.getTitle());
+                bundle.putString("desc", event.getDesc());
                 intent.putExtras(bundle);
                 startActivityForResult(intent, Constants.WATCH);
                 break;
-            } else {
-                Iterator<Map.Entry<String, SinglePoiEvent>> iterator = Variable.eventSingleMap.entrySet().iterator();
-                while (iterator.hasNext()) {
-                    Map.Entry<String, SinglePoiEvent> entrySingle = iterator.next();
-                    Variable.eventSingleId = entrySingle.getKey();
-                    SinglePoiEvent singlePoiEvent = entrySingle.getValue();
-                    Double longitude = singlePoiEvent.getLongitude();
-                    Double latitude = singlePoiEvent.getLatitude();
-                    Log.i(TAG, "longitude = " + longitude + "  latitude = " + latitude);
-                    if (latLng.latitude == latitude && latLng.longitude == longitude) {
-                        Intent intent = new Intent(MapActivity.this, DetailActivity.class);
-                        Bundle bundle = new Bundle();
-                        String startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(doublePoiEvent.getStartTime());
-                        bundle.putString("startTime", startTime);
-                        bundle.putString("loc", singlePoiEvent.getLocation());
-                        bundle.putString("labels", singlePoiEvent.getLabels());
-                        bundle.putString("title", singlePoiEvent.getTitle());
-                        bundle.putString("desc", singlePoiEvent.getDesc());
-                        intent.putExtras(bundle);
-                        startActivityForResult(intent, Constants.WATCH);
-                        break;
-                    }
-                }
             }
+
         }
 
         return true;

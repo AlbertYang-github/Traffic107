@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.activity.BaseActivity;
-import com.yohann.traffic107.common.bean.DoublePoiEvent;
+import com.yohann.traffic107.common.bean.Event;
 import com.yohann.traffic107.utils.BmobUtils;
 import com.yohann.traffic107.utils.ViewUtils;
 
@@ -34,7 +34,7 @@ public class CommitActivity extends BaseActivity {
 
     private ListView lvCommit;
     private List<String> keyList;
-    private Map<String, DoublePoiEvent> eventMap;
+    private Map<String, Event> eventMap;
 
     private Handler handler = new Handler() {
         @Override
@@ -66,10 +66,10 @@ public class CommitActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String key = keyList.get(position - 1);
-                DoublePoiEvent doublePoiEvent = eventMap.get(key);
+                Event event = eventMap.get(key);
                 Intent intent = new Intent(CommitActivity.this, DetailCommitActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("doublePoiEvent", doublePoiEvent);
+                bundle.putSerializable("event", event);
                 bundle.putString("objectId", key);
                 intent.putExtras(bundle);
                 startActivityForResult(intent, 0);
@@ -103,8 +103,8 @@ public class CommitActivity extends BaseActivity {
             TextView tvCommitStatus = (TextView) view.findViewById(R.id.tv_status_commit_root);
 
             String key = keyList.get(position);
-            DoublePoiEvent doublePoiEvent = eventMap.get(key);
-            String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(doublePoiEvent.getStartTime());
+            Event event = eventMap.get(key);
+            String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getStartTime());
             tvTime.setText(time);
             return view;
         }
@@ -115,19 +115,19 @@ public class CommitActivity extends BaseActivity {
         new Thread() {
             @Override
             public void run() {
-                BmobQuery<DoublePoiEvent> query = new BmobQuery<>();
+                BmobQuery<Event> query = new BmobQuery<>();
                 query.addWhereEqualTo("commStatus", "审核中");
 
-                query.findObjects(new FindListener<DoublePoiEvent>() {
+                query.findObjects(new FindListener<Event>() {
                     @Override
-                    public void done(List<DoublePoiEvent> list, BmobException e) {
+                    public void done(List<Event> list, BmobException e) {
                         if (e == null) {
                             if (list.size() == 0) {
                                 ViewUtils.show(CommitActivity.this, "没有数据可加载");
                             } else {
-                                for (DoublePoiEvent doublePoiEvent : list) {
-                                    keyList.add(doublePoiEvent.getObjectId());
-                                    eventMap.put(doublePoiEvent.getObjectId(), doublePoiEvent);
+                                for (Event event : list) {
+                                    keyList.add(event.getObjectId());
+                                    eventMap.put(event.getObjectId(), event);
                                 }
                                 handler.sendEmptyMessage(SHOW);
                                 ViewUtils.show(CommitActivity.this, "加载了" + list.size() + "条数据");

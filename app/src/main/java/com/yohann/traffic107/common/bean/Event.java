@@ -8,7 +8,7 @@ import cn.bmob.v3.BmobObject;
 /**
  * Created by Yohann on 2016/8/25.
  */
-public class DoublePoiEvent extends BmobObject implements Serializable {
+public class Event extends BmobObject implements Serializable {
     private String startLocation;
     private String endLocation;
     private Double startLongitude;
@@ -21,6 +21,7 @@ public class DoublePoiEvent extends BmobObject implements Serializable {
     private Date startTime;
     private Date endTime;
     private Boolean isFinished;
+    private
 
     public void setStartLocation(String startLocation) {
         this.startLocation = startLocation;

@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.Constants.Variable;
 import com.yohann.traffic107.common.activity.BaseActivity;
-import com.yohann.traffic107.common.bean.DoublePoiEvent;
+import com.yohann.traffic107.common.bean.Event;
 import com.yohann.traffic107.utils.StringUtils;
 import com.yohann.traffic107.utils.ViewUtils;
 
@@ -22,7 +22,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 import me.gujun.android.taggroup.TagGroup;
 
-public class DetailActivity extends BaseActivity {
+public class DoubleDetailActivity extends BaseActivity {
     private TextView tvTime;
     private TextView tvStartLoc;
     private TextView tvEndLoc;
@@ -34,7 +34,7 @@ public class DetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.activity_detail_single);
         init();
         loadData();
     }
@@ -52,27 +52,27 @@ public class DetailActivity extends BaseActivity {
         btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(DetailActivity.this);
+                final AlertDialog.Builder builder = new AlertDialog.Builder(DoubleDetailActivity.this);
                 builder.setTitle("确认删除");
                 builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (TextUtils.isEmpty(Variable.eventId)) {
                         } else {
-                            DoublePoiEvent doublePoiEvent = new DoublePoiEvent();
-                            doublePoiEvent.setFinished(true);
-                            doublePoiEvent.setEndTime(new Date(System.currentTimeMillis()));
+                            Event event = new Event();
+                            event.setFinished(true);
+                            event.setEndTime(new Date(System.currentTimeMillis()));
 
-                            doublePoiEvent.update(Variable.eventId, new UpdateListener() {
+                            event.update(Variable.eventId, new UpdateListener() {
                                 @Override
                                 public void done(BmobException e) {
                                     if (e == null) {
-                                        ViewUtils.show(DetailActivity.this, "删除成功");
+                                        ViewUtils.show(DoubleDetailActivity.this, "删除成功");
                                         Variable.eventMap.remove(Variable.eventId);
                                         setResult(RESULT_OK, null);
                                         finish();
                                     } else {
-                                        ViewUtils.show(DetailActivity.this, "删除失败 " + e.getErrorCode());
+                                        ViewUtils.show(DoubleDetailActivity.this, "删除失败 " + e.getErrorCode());
                                     }
                                 }
                             });
@@ -100,7 +100,7 @@ public class DetailActivity extends BaseActivity {
         bundle.getString("desc");
 
         tvTime.setText(bundle.getString("startTime"));
-        tvStartLoc.setText(bundle.getString("endLoc"));
+        tvStartLoc.setText(bundle.getString("startLoc"));
         tvEndLoc.setText(bundle.getString("endLoc"));
         tvTitle.setText(bundle.getString("title"));
         tvDesc.setText(bundle.getString("desc"));

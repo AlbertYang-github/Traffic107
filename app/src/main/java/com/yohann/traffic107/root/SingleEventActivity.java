@@ -17,8 +17,7 @@ import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.yohann.traffic107.R;
-import com.yohann.traffic107.common.bean.DoublePoiEvent;
-import com.yohann.traffic107.common.bean.SinglePoiEvent;
+import com.yohann.traffic107.common.bean.Event;
 import com.yohann.traffic107.utils.BmobUtils;
 import com.yohann.traffic107.utils.StringUtils;
 import com.yohann.traffic107.utils.ViewUtils;
@@ -50,7 +49,7 @@ public class SingleEventActivity extends AppCompatActivity {
     private Double latitude;
     private String loc;
     private Date startDate;
-    private SinglePoiEvent event;
+    private Event event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,7 +171,7 @@ public class SingleEventActivity extends AppCompatActivity {
                 case R.id.btn_finish:
                     String labels = StringUtils.getStringFromArrayList(labelList);
 
-                    event = new SinglePoiEvent();
+                    event = new Event();
                     event.setLocation(loc);
                     event.setLatitude(latitude);
                     event.setLongitude(longitude);

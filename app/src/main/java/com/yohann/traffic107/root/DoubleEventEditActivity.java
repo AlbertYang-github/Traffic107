@@ -17,7 +17,7 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.activity.BaseActivity;
-import com.yohann.traffic107.common.bean.DoublePoiEvent;
+import com.yohann.traffic107.common.bean.Event;
 import com.yohann.traffic107.utils.BmobUtils;
 import com.yohann.traffic107.utils.StringUtils;
 import com.yohann.traffic107.utils.ViewUtils;
@@ -55,7 +55,7 @@ public class DoubleEventEditActivity extends BaseActivity {
     private String startLoc;
     private String endLoc;
     private Date startDate;
-    private DoublePoiEvent event;
+    private Event event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,7 +189,7 @@ public class DoubleEventEditActivity extends BaseActivity {
                 case R.id.btn_finish:
                     String labels = StringUtils.getStringFromArrayList(labelList);
 
-                    event = new DoublePoiEvent();
+                    event = new Event();
                     event.setStartLocation(startLoc);
                     event.setEndLocation(endLoc);
                     event.setStartLatitude(startLatitude);

@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.activity.BaseActivity;
-import com.yohann.traffic107.common.bean.DoublePoiEvent;
+import com.yohann.traffic107.common.bean.Event;
 import com.yohann.traffic107.utils.StringUtils;
 import com.yohann.traffic107.utils.ViewUtils;
 
@@ -60,14 +60,14 @@ public class DetailCommitActivity extends BaseActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         objectId = bundle.getString("objectId");
-        DoublePoiEvent doublePoiEvent = (DoublePoiEvent) bundle.getSerializable("doublePoiEvent");
-        String[] labels = StringUtils.getArrayFromString(doublePoiEvent.getLabels());
+        Event event = (Event) bundle.getSerializable("event");
+        String[] labels = StringUtils.getArrayFromString(event.getLabels());
         labelGroup.setTags(labels);
-        tvTime.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(doublePoiEvent.getStartTime()));
-        tvStartLoc.setText(doublePoiEvent.getStartLocation());
-        tvEndLoc.setText(doublePoiEvent.getEndLocation());
-        tvTitle.setText(doublePoiEvent.getTitle());
-        tvDesc.setText(doublePoiEvent.getDesc());
+        tvTime.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getStartTime()));
+        tvStartLoc.setText(event.getStartLocation());
+        tvEndLoc.setText(event.getEndLocation());
+        tvTitle.setText(event.getTitle());
+        tvDesc.setText(event.getDesc());
     }
 
     class MyOnClickListener implements View.OnClickListener {
@@ -81,9 +81,9 @@ public class DetailCommitActivity extends BaseActivity {
                     builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            DoublePoiEvent doublePoiEvent = new DoublePoiEvent();
+                            Event event = new Event();
 
-                            doublePoiEvent.update(objectId, new UpdateListener() {
+                            event.update(objectId, new UpdateListener() {
                                 @Override
                                 public void done(BmobException e) {
                                     if (e == null) {
@@ -111,8 +111,8 @@ public class DetailCommitActivity extends BaseActivity {
                     builderR.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            DoublePoiEvent doublePoiEvent = new DoublePoiEvent();
-                            doublePoiEvent.update(objectId, new UpdateListener() {
+                            Event event = new Event();
+                            event.update(objectId, new UpdateListener() {
                                 @Override
                                 public void done(BmobException e) {
                                     if (e == null) {

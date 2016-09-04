@@ -18,7 +18,7 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.activity.BaseActivity;
-import com.yohann.traffic107.common.bean.DoublePoiEvent;
+import com.yohann.traffic107.common.bean.Event;
 import com.yohann.traffic107.utils.BmobUtils;
 import com.yohann.traffic107.utils.StringUtils;
 import com.yohann.traffic107.utils.ViewUtils;
@@ -193,25 +193,25 @@ public class EditActivity extends BaseActivity {
                     pbCommit.setVisibility(View.VISIBLE);
                     String labels = StringUtils.getStringFromArrayList(labelList);
 
-                    final DoublePoiEvent doublePoiEvent = new DoublePoiEvent();
-                    doublePoiEvent.setStartLocation(startLoc);
-                    doublePoiEvent.setEndLocation(endLoc);
-                    doublePoiEvent.setStartLatitude(startLatitude);
-                    doublePoiEvent.setStartLongitude(startLongitude);
-                    doublePoiEvent.setEndLatitude(endLatitude);
-                    doublePoiEvent.setEndLongitude(endLongitude);
-                    doublePoiEvent.setLabels(labels);
-                    doublePoiEvent.setTitle(etTitle.getText().toString());
-                    doublePoiEvent.setDesc(etDesc.getText().toString());
-                    doublePoiEvent.setStartTime(startDate);
-                    doublePoiEvent.setFinished(false);
+                    final Event event = new Event();
+                    event.setStartLocation(startLoc);
+                    event.setEndLocation(endLoc);
+                    event.setStartLatitude(startLatitude);
+                    event.setStartLongitude(startLongitude);
+                    event.setEndLatitude(endLatitude);
+                    event.setEndLongitude(endLongitude);
+                    event.setLabels(labels);
+                    event.setTitle(etTitle.getText().toString());
+                    event.setDesc(etDesc.getText().toString());
+                    event.setStartTime(startDate);
+                    event.setFinished(false);
 
                     //上传
                     new Thread() {
                         @Override
                         public void run() {
 
-                            doublePoiEvent.save(new SaveListener<String>() {
+                            event.save(new SaveListener<String>() {
                                 @Override
                                 public void done(String s, BmobException e) {
                                     if (e == null) {

@@ -63,7 +63,7 @@
 
         <service android:name="com.amap.api.location.APSService" />
 
-        <activity android:name=".root.DetailActivity" />
+        <activity android:name=".root.DoubleDetailActivity" />
         <activity android:name=".user.activity.DetailActivity" />
         <activity android:name=".root.DetailCommitActivity" />
         <activity android:name=".user.activity.HomeActivity" />

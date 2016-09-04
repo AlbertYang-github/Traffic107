@@ -18,7 +18,7 @@ import com.amap.api.maps.model.Marker;
 import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.Constants.Constants;
 import com.yohann.traffic107.common.Constants.Variable;
-import com.yohann.traffic107.common.bean.DoublePoiEvent;
+import com.yohann.traffic107.common.bean.Event;
 import com.yohann.traffic107.user.activity.DetailActivity;
 import com.yohann.traffic107.user.activity.HomeActivity;
 import com.yohann.traffic107.utils.BmobUtils;
@@ -119,23 +119,23 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
             @Override
             public void run() {
 
-                BmobQuery<DoublePoiEvent> query = new BmobQuery<>();
+                BmobQuery<Event> query = new BmobQuery<>();
                 query.addWhereEqualTo("isFinished", false);
-                List<BmobQuery<DoublePoiEvent>> list = new ArrayList<>();
-                list.add(new BmobQuery<DoublePoiEvent>().addWhereEqualTo("commStatus", "审核成功"));
+                List<BmobQuery<Event>> list = new ArrayList<>();
+                list.add(new BmobQuery<Event>().addWhereEqualTo("commStatus", "审核成功"));
                 query.and(list);
 
                 while (status) {
-                    query.findObjects(new FindListener<DoublePoiEvent>() {
+                    query.findObjects(new FindListener<Event>() {
                         @Override
-                        public void done(List<DoublePoiEvent> list, BmobException e) {
+                        public void done(List<Event> list, BmobException e) {
                             if (e == null) {
                                 if (list.size() == 0) {
                                 } else {
                                     if (Variable.eventMap.size() != list.size()) {
                                         //清理原来的数据
                                         Variable.eventMap.clear();
-                                        for (DoublePoiEvent event : list) {
+                                        for (Event event : list) {
                                             Variable.eventMap.put(event.getObjectId(), event);
                                         }
                                         ViewUtils.show(activity, "数据有更新");
@@ -175,11 +175,11 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
     public boolean onMarkerClick(Marker marker) {
         LatLng latLng = marker.getPosition();
 
-        Iterator<Map.Entry<String, DoublePoiEvent>> it = Variable.eventMap.entrySet().iterator();
+        Iterator<Map.Entry<String, Event>> it = Variable.eventMap.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<String, DoublePoiEvent> entry = it.next();
+            Map.Entry<String, Event> entry = it.next();
             Variable.eventId = entry.getKey();
-            DoublePoiEvent event = entry.getValue();
+            Event event = entry.getValue();
             Double startLatitude = event.getStartLatitude();
             Double startLongitude = event.getStartLongitude();
             Double endLatitude = event.getEndLatitude();
