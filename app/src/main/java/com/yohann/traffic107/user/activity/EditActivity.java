@@ -186,7 +186,6 @@ public class EditActivity extends BaseActivity {
                     event.setTitle(etTitle.getText().toString());
                     event.setDesc(etDesc.getText().toString());
                     event.setStartTime(startDate);
-                    event.setCommStatus("审核中");
                     event.setUsername(Variable.userName);
                     event.setFinished(false);
 

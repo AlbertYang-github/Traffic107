@@ -49,17 +49,6 @@
                         android:textColor="#000"
                         android:textSize="16sp" />
 
-                    <TextView
-                        android:id="@+id/tv_commit_status_user"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginTop="5dp"
-                        android:text="提交状态"
-                        android:textColor="#df2121"
-                        android:textSize="16sp" />
-
                 </RelativeLayout>
 
 
@@ -139,6 +128,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="hello" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="10dp"
+                    android:text="路况照片"
+                    android:textColor="#3b6087"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/iv_pic"
+                    android:layout_width="match_parent"
+                    android:layout_height="230dp"
+                    android:visibility="gone"/>
 
             </LinearLayout>
 

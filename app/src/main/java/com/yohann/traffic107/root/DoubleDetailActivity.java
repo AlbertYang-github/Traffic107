@@ -2,11 +2,14 @@ package com.yohann.traffic107.root;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yohann.traffic107.R;
@@ -16,6 +19,11 @@ import com.yohann.traffic107.common.bean.Event;
 import com.yohann.traffic107.utils.StringUtils;
 import com.yohann.traffic107.utils.ViewUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
 
 import cn.bmob.v3.exception.BmobException;
@@ -30,6 +38,9 @@ public class DoubleDetailActivity extends BaseActivity {
     private TextView tvTitle;
     private TextView tvDesc;
     private Button btnRemove;
+    private String picUrl;
+    private Bitmap bitmap;
+    private ImageView ivPic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +58,7 @@ public class DoubleDetailActivity extends BaseActivity {
         tvTitle = (TextView) findViewById(R.id.tv_title);
         tvDesc = (TextView) findViewById(R.id.tv_desc);
         btnRemove = (Button) findViewById(R.id.btn_remove);
+        ivPic = (ImageView) findViewById(R.id.iv_pic);
 
         //删除该Marker
         btnRemove.setOnClickListener(new View.OnClickListener() {
@@ -93,19 +105,38 @@ public class DoubleDetailActivity extends BaseActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
-        bundle.getString("startLoc");
-        bundle.getString("endLoc");
-        bundle.getString("labels");
-        bundle.getString("title");
-        bundle.getString("desc");
-
         tvTime.setText(bundle.getString("startTime"));
         tvStartLoc.setText(bundle.getString("startLoc"));
         tvEndLoc.setText(bundle.getString("endLoc"));
         tvTitle.setText(bundle.getString("title"));
         tvDesc.setText(bundle.getString("desc"));
-
-        String[] labels = StringUtils.getArrayFromString(bundle.getString("labels"));
-        labelGroup.setTags(labels);
+        picUrl = bundle.getString("pic");
+        if (picUrl != null) {
+            new Thread() {
+                @Override
+                public void run() {
+                    ivPic.setVisibility(View.VISIBLE);
+                    URL url = null;
+                    try {
+                        url = new URL(picUrl);
+                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                        InputStream inputStream = conn.getInputStream();
+                        bitmap = BitmapFactory.decodeStream(inputStream);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    ivPic.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ivPic.setImageBitmap(bitmap);
+                        }
+                    });
+                }
+            }.start();
+            String[] labels = StringUtils.getArrayFromString(bundle.getString("labels"));
+            labelGroup.setTags(labels);
+        }
     }
 }

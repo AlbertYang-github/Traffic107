@@ -105,7 +105,6 @@ public class PersonalActivity extends BaseActivity {
             tvTitle.setText(event.getTitle());
             String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getStartTime());
             tvTime.setText(time);
-            tvStatus.setText(event.getCommStatus());
             return view;
         }
     }

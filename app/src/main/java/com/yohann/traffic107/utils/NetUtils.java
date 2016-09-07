@@ -45,9 +45,6 @@ public class NetUtils {
                 Variable.eventMap.clear();
                 BmobQuery<Event> query = new BmobQuery<>();
                 query.addWhereEqualTo("isFinished", false);
-                List<BmobQuery<Event>> list = new ArrayList<>();
-                list.add(new BmobQuery<Event>().addWhereEqualTo("commStatus", "审核成功"));
-                query.and(list);
                 query.findObjects(new FindListener<Event>() {
                     @Override
                     public void done(List<Event> list, BmobException e) {

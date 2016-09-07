@@ -1,9 +1,11 @@
 package com.yohann.traffic107.common.bean;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.Date;
 
 import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.datatype.BmobFile;
 
 /**
  * Created by Yohann on 2016/8/25.
@@ -25,14 +27,23 @@ public class Event extends BmobObject implements Serializable {
     private Date endTime;
     private String username;
     private Boolean isFinished;
-    private String commStatus;
+    private String fileUrl;
+    private String rmUrl;
 
-    public String getCommStatus() {
-        return commStatus;
+    public String getFileUrl() {
+        return fileUrl;
     }
 
-    public void setCommStatus(String commStatus) {
-        this.commStatus = commStatus;
+    public String getRmUrl() {
+        return rmUrl;
+    }
+
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
+    }
+
+    public void setRmUrl(String rmUrl) {
+        this.rmUrl = rmUrl;
     }
 
     public String getUsername() {

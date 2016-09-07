@@ -65,7 +65,6 @@ public class DetailCommitActivity extends BaseActivity {
         tvLoc.setText(event.getLocation());
         tvTitle.setText(event.getTitle());
         tvDesc.setText(event.getDesc());
-        tvCommitStatus.setText(event.getCommStatus());
     }
 
     class MyOnClickListener implements View.OnClickListener {
@@ -80,7 +79,6 @@ public class DetailCommitActivity extends BaseActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Event event = new Event();
-                            event.setCommStatus("审核成功");
                             event.update(objectId, new UpdateListener() {
                                 @Override
                                 public void done(BmobException e) {
@@ -110,7 +108,6 @@ public class DetailCommitActivity extends BaseActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Event event = new Event();
-                            event.setCommStatus("审核失败");
                             event.update(objectId, new UpdateListener() {
                                 @Override
                                 public void done(BmobException e) {

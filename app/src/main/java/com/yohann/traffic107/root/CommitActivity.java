@@ -107,7 +107,6 @@ public class CommitActivity extends BaseActivity {
             Event event = eventMap.get(key);
             String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getStartTime());
             tvTime.setText(time);
-            tvCommitStatus.setText(event.getCommStatus());
             tvUsername.setText(event.getUsername());
             return view;
         }

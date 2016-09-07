@@ -21,18 +21,23 @@ import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.yohann.traffic107.R;
+import com.yohann.traffic107.common.Constants.Variable;
 import com.yohann.traffic107.common.activity.BaseActivity;
 import com.yohann.traffic107.common.bean.Event;
 import com.yohann.traffic107.utils.BmobUtils;
 import com.yohann.traffic107.utils.StringUtils;
 import com.yohann.traffic107.utils.ViewUtils;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
+import cn.bmob.v3.listener.UploadFileListener;
 import me.gujun.android.taggroup.TagGroup;
 
 public class SingleEventEditActivity extends BaseActivity {
@@ -58,6 +63,9 @@ public class SingleEventEditActivity extends BaseActivity {
     private ImageView ivAddPic;
     private ImageView ivPic;
     private Bitmap bitmap;
+    private String imagePath;
+    private String fileUrl;
+    private String rmUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,7 +155,7 @@ public class SingleEventEditActivity extends BaseActivity {
     class MyOnClickListener implements View.OnClickListener {
 
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
 
             switch (v.getId()) {
                 //填写标签内容
@@ -206,28 +214,51 @@ public class SingleEventEditActivity extends BaseActivity {
                     event.setTitle(etTitle.getText().toString());
                     event.setDesc(etDesc.getText().toString());
                     event.setStartTime(startDate);
-                    event.setCommStatus("审核成功");
                     event.setFinished(false);
 
                     //上传
                     new Thread() {
+
                         @Override
                         public void run() {
-//                            eventPoi.save(new SaveListener<String>() {
-//                                @Override
-//                                public void done(String s, BmobException e) {
-//                                }
-//                            });
 
+                            //上传文本信息
                             event.save(new SaveListener<String>() {
                                 @Override
                                 public void done(String s, BmobException e) {
                                     if (e == null) {
-                                        ViewUtils.show(SingleEventEditActivity.this, "上传成功");
-                                        setResult(RESULT_OK, null);
-                                        finish();
-                                    } else {
-                                        ViewUtils.show(SingleEventEditActivity.this, "上传失败" + e.getErrorCode());
+                                        Variable.objectId = event.getObjectId();
+                                        Log.i(TAG, "done: 基本信息上传完成");
+                                    }
+                                }
+                            });
+
+                            //上传文件
+                            final BmobFile bmobFile = new BmobFile(new File(imagePath));
+                            bmobFile.upload(new UploadFileListener() {
+                                @Override
+                                public void done(BmobException e) {
+                                    if (e == null) {
+                                        fileUrl = bmobFile.getFileUrl();
+                                        rmUrl = bmobFile.getUrl();
+                                        Log.i(TAG, "done: 文件上传完成");
+
+                                        //添加Url
+                                        Event eventUrl = new Event();
+                                        eventUrl.setFileUrl(fileUrl);
+                                        eventUrl.setRmUrl(rmUrl);
+                                        Log.i(TAG, "run: Variable.objectId = " + Variable.objectId);
+                                        eventUrl.update(Variable.objectId, new UpdateListener() {
+                                            @Override
+                                            public void done(BmobException e) {
+                                                if (e == null) {
+                                                    Log.i(TAG, "done: Url添加完成");
+                                                    ViewUtils.show(SingleEventEditActivity.this, "上传成功");
+                                                    setResult(RESULT_OK);
+                                                    finish();
+                                                }
+                                            }
+                                        });
                                     }
                                 }
                             });
@@ -259,7 +290,7 @@ public class SingleEventEditActivity extends BaseActivity {
             Cursor c = getContentResolver().query(selectedImage, filePathColumns, null, null, null);
             c.moveToFirst();
             int columnIndex = c.getColumnIndex(filePathColumns[0]);
-            String imagePath = c.getString(columnIndex);
+            imagePath = c.getString(columnIndex);
             Log.i(TAG, "onActivityResult: " + imagePath);
             bitmap = BitmapFactory.decodeFile(imagePath);
             ivPic.setVisibility(View.VISIBLE);

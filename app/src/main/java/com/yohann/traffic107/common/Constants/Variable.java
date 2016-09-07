@@ -15,6 +15,8 @@ public class Variable {
     public static String eventId;
     public static String MsgId;
 
+    public static String objectId;
+
     public static Double myLatitude;
     public static Double myLongitude;
 

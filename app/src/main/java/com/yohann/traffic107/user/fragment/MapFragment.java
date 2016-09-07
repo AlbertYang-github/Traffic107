@@ -213,6 +213,7 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
                     bundle.putString("labels", event.getLabels());
                     bundle.putString("title", event.getTitle());
                     bundle.putString("desc", event.getDesc());
+                    bundle.putString("pic", event.getFileUrl());
                     intent.putExtras(bundle);
                     startActivityForResult(intent, Constants.WATCH);
                     break;
@@ -236,6 +237,7 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
                     bundle.putString("labels", event.getLabels());
                     bundle.putString("title", event.getTitle());
                     bundle.putString("desc", event.getDesc());
+                    bundle.putString("pic", event.getFileUrl());
                     intent.putExtras(bundle);
                     startActivityForResult(intent, Constants.WATCH);
                     break;
