@@ -1,7 +1,9 @@
 package com.yohann.traffic107.user.activity;
 
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -15,7 +17,6 @@ import android.widget.TextView;
 import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.Constants.Variable;
 import com.yohann.traffic107.common.activity.BaseActivity;
-import com.yohann.traffic107.user.fragment.AddFragment;
 import com.yohann.traffic107.user.fragment.AskFragment;
 import com.yohann.traffic107.user.fragment.MapFragment;
 import com.yohann.traffic107.user.fragment.StatisticsFragment;
@@ -62,10 +63,6 @@ public class HomeActivity extends BaseActivity {
                         fragmentManager.beginTransaction().replace(R.id.fl_content, new MapFragment()).commit();
                         break;
 
-                    case "发布路况":
-                        fragmentManager.beginTransaction().replace(R.id.fl_content, new AddFragment()).commit();
-                        break;
-
                     case "询问附近":
                         fragmentManager.beginTransaction().replace(R.id.fl_content, new AskFragment()).commit();
                         break;
@@ -89,5 +86,20 @@ public class HomeActivity extends BaseActivity {
     public void skipMine(View view) {
         startActivity(new Intent(this, PersonalActivity.class));
         dlDrawer.closeDrawers();
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("温馨提示：")
+                .setMessage("您确定要退出？")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        HomeActivity.super.onBackPressed();
+                    }
+                })
+                .setNegativeButton("取消", null);
+        builder.create().show();
     }
 }

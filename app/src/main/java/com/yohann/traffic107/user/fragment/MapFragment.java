@@ -2,12 +2,16 @@ package com.yohann.traffic107.user.fragment;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.amap.api.maps.AMap;
@@ -21,7 +25,9 @@ import com.yohann.traffic107.common.Constants.Variable;
 import com.yohann.traffic107.common.bean.Event;
 import com.yohann.traffic107.user.activity.DetailActivity;
 import com.yohann.traffic107.user.activity.HomeActivity;
+import com.yohann.traffic107.user.activity.NotiMsgActivity;
 import com.yohann.traffic107.utils.BmobUtils;
+import com.yohann.traffic107.utils.LocUtils;
 import com.yohann.traffic107.utils.LocationInit;
 import com.yohann.traffic107.utils.NetUtils;
 import com.yohann.traffic107.utils.ViewUtils;
@@ -40,6 +46,7 @@ import cn.bmob.v3.listener.FindListener;
  * Created by Yohann on 2016/8/28.
  */
 public class MapFragment extends Fragment implements AMap.OnMarkerClickListener {
+    private static final String TAG = "MapFragmentInfo";
     private HomeActivity activity;
     private ImageView ivMenu;
     private MapView mapView;
@@ -48,6 +55,8 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
     private LocationInit locationInit;
     private ImageView ivFlush;
     private boolean status = true;
+    private ImageView ivNotification;
+    private Animation notiMsgAnim;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,8 +113,19 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
         netUtils = new NetUtils(activity, aMap);
         locationInit = new LocationInit(activity, aMap);
         aMap.setOnMarkerClickListener(this);
+        ivNotification = (ImageView) view.findViewById(R.id.iv_notification);
         UiSettings uiSettings = aMap.getUiSettings();
         uiSettings.setZoomControlsEnabled(false);
+        new LocUtils(activity, aMap).getLoc();
+        notiMsgAnim = AnimationUtils.loadAnimation(activity, R.anim.plus_zoom_in);
+
+        ivNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ivNotification.startAnimation(notiMsgAnim);
+                startActivity(new Intent(activity, NotiMsgActivity.class));
+            }
+        });
 
         ivFlush.setOnClickListener(new View.OnClickListener() {
             @Override

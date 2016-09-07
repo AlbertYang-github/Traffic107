@@ -2,7 +2,12 @@ package com.yohann.traffic107.root;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -56,6 +61,9 @@ public class DoubleEventEditActivity extends BaseActivity {
     private String endLoc;
     private Date startDate;
     private Event event;
+    private ImageView ivAddPic;
+    private ImageView ivPic;
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +86,17 @@ public class DoubleEventEditActivity extends BaseActivity {
         btnFinish = (Button) findViewById(R.id.btn_finish);
         etTitle = (EditText) findViewById(R.id.et_title);
         etDesc = (EditText) findViewById(R.id.et_desc);
+        ivAddPic = (ImageView) findViewById(R.id.iv_add_pic);
+        ivPic = (ImageView) findViewById(R.id.iv_pic);
+
+        ivPic.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                bitmap = null;
+                ivPic.setVisibility(View.GONE);
+                return true;
+            }
+        });
 
         geocodeSearch = new GeocodeSearch(this);
         addressList = new ArrayList<>();
@@ -104,6 +123,7 @@ public class DoubleEventEditActivity extends BaseActivity {
         MyOnClickListener listener = new MyOnClickListener();
         ivAddLabels.setOnClickListener(listener);
         btnFinish.setOnClickListener(listener);
+        ivAddPic.setOnClickListener(listener);
         geocodeSearch.setOnGeocodeSearchListener(new AddressListener());
 
         //获取当前时间
@@ -186,6 +206,12 @@ public class DoubleEventEditActivity extends BaseActivity {
                     });
                     break;
 
+                case R.id.iv_add_pic:
+                    Intent intent = new Intent(Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(intent, 1);
+                    break;
+
                 case R.id.btn_finish:
                     String labels = StringUtils.getStringFromArrayList(labelList);
 
@@ -244,6 +270,22 @@ public class DoubleEventEditActivity extends BaseActivity {
 
         @Override
         public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumns = {MediaStore.Images.Media.DATA};
+            Cursor c = getContentResolver().query(selectedImage, filePathColumns, null, null, null);
+            c.moveToFirst();
+            int columnIndex = c.getColumnIndex(filePathColumns[0]);
+            String imagePath = c.getString(columnIndex);
+            bitmap = BitmapFactory.decodeFile(imagePath);
+            ivPic.setVisibility(View.VISIBLE);
+            ivPic.setImageBitmap(bitmap);
+            c.close();
         }
     }
 }

@@ -71,7 +71,8 @@
         <activity android:name=".root.SingleEventEditActivity" />
         <activity android:name=".root.SingleDetailActivity" />
         <activity android:name=".user.activity.SingleDetailActivity" />
-        <activity android:name=".user.activity.PersonDetailActivity"></activity>
+        <activity android:name=".user.activity.PersonDetailActivity" />
+        <activity android:name=".user.activity.NotiMsgActivity"></activity>
     </application>
 
 </manifest>

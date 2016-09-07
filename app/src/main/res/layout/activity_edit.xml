@@ -175,6 +175,38 @@
 
                 </LinearLayout>
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="添加路况照片（长按图片删除）"
+                        android:textColor="#3b6087"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/iv_add_pic"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="20dp"
+                        android:clickable="true"
+                        android:src="@mipmap/add_labels" />
+
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/iv_pic"
+                    android:layout_width="match_parent"
+                    android:layout_height="230dp"
+                    android:visibility="gone" />
+
                 <Button
                     android:id="@+id/btn_finish"
                     android:layout_width="match_parent"

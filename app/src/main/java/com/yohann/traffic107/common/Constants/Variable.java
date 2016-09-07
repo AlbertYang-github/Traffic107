@@ -15,5 +15,8 @@ public class Variable {
     public static String eventId;
     public static String MsgId;
 
+    public static Double myLatitude;
+    public static Double myLongitude;
+
     public static Map<String, Event> eventMap = new HashMap<>();
 }

@@ -1,5 +1,7 @@
 package com.yohann.traffic107.root;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -488,6 +490,21 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
                     netUtils.loadMarker();
                 }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("温馨提示：")
+                .setMessage("您确定要退出？")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        MapActivity.super.onBackPressed();
+                    }
+                })
+                .setNegativeButton("取消", null);
+        builder.create().show();
     }
 }
 
