@@ -153,11 +153,24 @@
                     android:textColor="#3b6087"
                     android:textSize="18sp" />
 
-                <ImageView
-                    android:id="@+id/iv_pic"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="230dp"
-                    android:visibility="gone"/>
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/iv_pic"
+                        android:layout_width="match_parent"
+                        android:layout_height="230dp"
+                        android:visibility="gone"/>
+
+                    <com.mingle.widget.LoadingView
+                        android:id="@+id/loadingView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:visibility="gone"></com.mingle.widget.LoadingView>
+
+                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

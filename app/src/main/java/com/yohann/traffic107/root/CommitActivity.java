@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.activity.BaseActivity;
 import com.yohann.traffic107.common.bean.Event;
+import com.yohann.traffic107.common.bean.UserEvent;
 import com.yohann.traffic107.utils.BmobUtils;
 import com.yohann.traffic107.utils.ViewUtils;
 
@@ -35,7 +36,7 @@ public class CommitActivity extends BaseActivity {
 
     private ListView lvCommit;
     private List<String> keyList;
-    private Map<String, Event> eventMap;
+    private Map<String, UserEvent> eventMap;
 
     private Handler handler = new Handler() {
         @Override
@@ -67,11 +68,14 @@ public class CommitActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String key = keyList.get(position - 1);
-                Event event = eventMap.get(key);
+                UserEvent event = eventMap.get(key);
                 Intent intent = new Intent(CommitActivity.this, DetailCommitActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("event", event);
-                bundle.putString("objectId", key);
+                String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getTime());
+                bundle.putString("time", time);
+                bundle.putString("loc", event.getLocation());
+                bundle.putString("pic", event.getPicUrl());
+                bundle.putString("voice", event.getVoiceUrl());
                 intent.putExtras(bundle);
                 startActivityForResult(intent, 0);
             }
@@ -101,11 +105,10 @@ public class CommitActivity extends BaseActivity {
 
             TextView tvUsername = (TextView) view.findViewById(R.id.tv_username_commit_root);
             TextView tvTime = (TextView) view.findViewById(R.id.tv_time_commit_root);
-            TextView tvCommitStatus = (TextView) view.findViewById(R.id.tv_status_commit_root);
 
             String key = keyList.get(position);
-            Event event = eventMap.get(key);
-            String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getStartTime());
+            UserEvent event = eventMap.get(key);
+            String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getTime());
             tvTime.setText(time);
             tvUsername.setText(event.getUsername());
             return view;
@@ -117,15 +120,15 @@ public class CommitActivity extends BaseActivity {
         new Thread() {
             @Override
             public void run() {
-                BmobQuery<Event> query = new BmobQuery<>();
-                query.findObjects(new FindListener<Event>() {
+                BmobQuery<UserEvent> query = new BmobQuery<>();
+                query.findObjects(new FindListener<UserEvent>() {
                     @Override
-                    public void done(List<Event> list, BmobException e) {
+                    public void done(List<UserEvent> list, BmobException e) {
                         if (e == null) {
                             if (list.size() == 0) {
                                 ViewUtils.show(CommitActivity.this, "没有数据可加载");
                             } else {
-                                for (Event event : list) {
+                                for (UserEvent event : list) {
                                     String username = event.getUsername();
                                     if (!TextUtils.isEmpty(username)) {
                                         keyList.add(event.getObjectId());

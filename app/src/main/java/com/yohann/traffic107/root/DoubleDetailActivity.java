@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mingle.widget.LoadingView;
 import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.Constants.Variable;
 import com.yohann.traffic107.common.activity.BaseActivity;
@@ -41,6 +42,7 @@ public class DoubleDetailActivity extends BaseActivity {
     private String picUrl;
     private Bitmap bitmap;
     private ImageView ivPic;
+    private LoadingView loadingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,7 @@ public class DoubleDetailActivity extends BaseActivity {
         tvDesc = (TextView) findViewById(R.id.tv_desc);
         btnRemove = (Button) findViewById(R.id.btn_remove);
         ivPic = (ImageView) findViewById(R.id.iv_pic);
+        loadingView = (LoadingView) findViewById(R.id.loadingView);
 
         //删除该Marker
         btnRemove.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +119,7 @@ public class DoubleDetailActivity extends BaseActivity {
                 @Override
                 public void run() {
                     ivPic.setVisibility(View.VISIBLE);
+                    loadingView.setVisibility(View.VISIBLE);
                     URL url = null;
                     try {
                         url = new URL(picUrl);
@@ -131,6 +135,7 @@ public class DoubleDetailActivity extends BaseActivity {
                         @Override
                         public void run() {
                             ivPic.setImageBitmap(bitmap);
+                            loadingView.setVisibility(View.GONE);
                         }
                     });
                 }

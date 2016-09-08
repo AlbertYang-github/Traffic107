@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +28,7 @@ import com.yohann.traffic107.common.activity.BaseActivity;
 import com.yohann.traffic107.common.bean.Event;
 import com.yohann.traffic107.utils.BmobUtils;
 import com.yohann.traffic107.utils.StringUtils;
+import com.yohann.traffic107.utils.UploadingView;
 import com.yohann.traffic107.utils.ViewUtils;
 
 import java.io.File;
@@ -72,6 +75,14 @@ public class DoubleEventEditActivity extends BaseActivity {
     private String imagePath;
     private String fileUrl;
     private String rmUrl;
+    private UploadingView uploadingView;
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            uploadingView.close();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -221,6 +232,8 @@ public class DoubleEventEditActivity extends BaseActivity {
                     break;
 
                 case R.id.btn_finish:
+                    uploadingView = new UploadingView(DoubleEventEditActivity.this);
+                    uploadingView.open();
                     String labels = StringUtils.getStringFromArrayList(labelList);
 
                     event = new Event();
@@ -273,6 +286,7 @@ public class DoubleEventEditActivity extends BaseActivity {
                                             public void done(BmobException e) {
                                                 if (e == null) {
                                                     Log.i(TAG, "done: Url添加完成");
+                                                    handler.sendEmptyMessage(0);
                                                     ViewUtils.show(DoubleEventEditActivity.this, "上传成功");
                                                     setResult(RESULT_OK);
                                                     finish();

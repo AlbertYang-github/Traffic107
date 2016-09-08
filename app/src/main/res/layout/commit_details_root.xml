@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -40,7 +39,7 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/tv_time"
+                        android:id="@+id/tv_time_root_msg"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -49,18 +48,8 @@
                         android:textColor="#000"
                         android:textSize="16sp" />
 
-                    <TextView
-                        android:id="@+id/tv_commit_status_root_msg"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginTop="5dp"
-                        android:text="提交状态"
-                        android:textColor="#df2121"
-                        android:textSize="16sp" />
-
                 </RelativeLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -77,93 +66,62 @@
                         android:textSize="18sp" />
 
                     <TextView
-                        android:id="@+id/tv_loc"
+                        android:id="@+id/tv_loc_root_msg"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="hello" />
 
                 </LinearLayout>
 
-                <RelativeLayout
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="15dp"
+                    android:text="路况照片"
+                    android:textColor="#3b6087"
+                    android:textSize="18sp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/iv_pic_root_msg"
+                        android:layout_width="match_parent"
+                        android:layout_height="230dp"
+                        android:visibility="gone" />
+
+                    <com.mingle.widget.LoadingView
+                        android:id="@+id/loadingView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:visibility="gone"></com.mingle.widget.LoadingView>
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="路况标签"
+                        android:layout_gravity="center_vertical"
+                        android:text="语音文件："
                         android:textColor="#3b6087"
                         android:textSize="18sp" />
 
-                </RelativeLayout>
-
-                <me.gujun.android.taggroup.TagGroup
-                    android:id="@+id/label_group"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:atg_textColor="#e22856"
-                    app:atg_textSize="18sp" />
-
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="10dp"
-                    android:text="路况标题"
-                    android:textColor="#3b6087"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/tv_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="hello" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="10dp"
-                    android:text="路况详情"
-                    android:textColor="#3b6087"
-                    android:textSize="18sp" />
-
-
-                <TextView
-                    android:id="@+id/tv_desc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="hello" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginTop="20dp"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/btn_apply"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_margin="10dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/btn_selector"
-                        android:text="应用" />
-
-                    <Button
-                        android:id="@+id/btn_refuse"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_margin="10dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/btn_selector"
-                        android:text="拒绝" />
+                    <ImageView
+                        android:id="@+id/iv_voice_root_msg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:clickable="true"
+                        android:src="@mipmap/voice"
+                        android:visibility="invisible" />
 
                 </LinearLayout>
 

@@ -71,16 +71,21 @@ public class RegisterActivity extends BaseActivity {
                                 ViewUtils.show(RegisterActivity.this, "注册成功 id=" + Variable.userId);
                                 startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
                                 finish();
+                                pb.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        pb.setVisibility(View.INVISIBLE);
+                                    }
+                                });
                             } else {
                                 ViewUtils.show(RegisterActivity.this, "注册失败 " + e.getErrorCode());
+                                pb.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        pb.setVisibility(View.INVISIBLE);
+                                    }
+                                });
                             }
-                        }
-                    });
-
-                    pb.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            pb.setVisibility(View.INVISIBLE);
                         }
                     });
                 }

@@ -1,35 +1,34 @@
 package com.yohann.traffic107.root;
 
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mingle.widget.LoadingView;
 import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.activity.BaseActivity;
-import com.yohann.traffic107.common.bean.Event;
-import com.yohann.traffic107.utils.StringUtils;
-import com.yohann.traffic107.utils.ViewUtils;
 
-import java.text.SimpleDateFormat;
-
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.UpdateListener;
-import me.gujun.android.taggroup.TagGroup;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class DetailCommitActivity extends BaseActivity {
     private TextView tvTime;
     private TextView tvLoc;
-    private TagGroup labelGroup;
-    private TextView tvTitle;
-    private TextView tvDesc;
-    private Button btnApply;
-    private Button btnRefuse;
-    private TextView tvCommitStatus;
-    private String objectId;
+    private ImageView ivPic;
+    private ImageView ivVoice;
+    private String picUrl;
+    private Bitmap bitmap;
+    private String voiceUrl;
+    private MediaPlayer mediaPlayer;
+    private LoadingView loadingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,97 +39,72 @@ public class DetailCommitActivity extends BaseActivity {
     }
 
     private void init() {
-        tvTime = (TextView) findViewById(R.id.tv_time);
-        tvLoc = (TextView) findViewById(R.id.tv_loc);
-        labelGroup = (TagGroup) findViewById(R.id.label_group);
-        tvTitle = (TextView) findViewById(R.id.tv_title);
-        tvDesc = (TextView) findViewById(R.id.tv_desc);
-        btnApply = (Button) findViewById(R.id.btn_apply);
-        btnRefuse = (Button) findViewById(R.id.btn_refuse);
-        tvCommitStatus = (TextView) findViewById(R.id.tv_commit_status_root_msg);
+        tvTime = (TextView) findViewById(R.id.tv_time_root_msg);
+        tvLoc = (TextView) findViewById(R.id.tv_loc_root_msg);
+        ivPic = (ImageView) findViewById(R.id.iv_pic_root_msg);
+        ivVoice = (ImageView) findViewById(R.id.iv_voice_root_msg);
+        loadingView = (LoadingView) findViewById(R.id.loadingView);
 
-        MyOnClickListener listener = new MyOnClickListener();
-        btnRefuse.setOnClickListener(listener);
-        btnApply.setOnClickListener(listener);
+        ivVoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        mediaPlayer = new MediaPlayer();
+                        mediaPlayer.reset();
+                        try {
+                            mediaPlayer.setDataSource(voiceUrl);
+                            mediaPlayer.prepare();
+                            mediaPlayer.start();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }.start();
+            }
+        });
     }
 
     private void loadData() {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        objectId = bundle.getString("objectId");
-        Event event = (Event) bundle.getSerializable("event");
-        String[] labels = StringUtils.getArrayFromString(event.getLabels());
-        labelGroup.setTags(labels);
-        tvTime.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getStartTime()));
-        tvLoc.setText(event.getLocation());
-        tvTitle.setText(event.getTitle());
-        tvDesc.setText(event.getDesc());
-    }
 
-    class MyOnClickListener implements View.OnClickListener {
+        tvTime.setText(bundle.getString("time"));
+        tvLoc.setText(bundle.getString("loc"));
 
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.btn_apply:
-                    AlertDialog.Builder builder = new AlertDialog.Builder(DetailCommitActivity.this);
-                    builder.setTitle("确定应用");
-                    builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+        picUrl = bundle.getString("pic");
+        if (picUrl != null) {
+            new Thread() {
+                @Override
+                public void run() {
+                    ivPic.setVisibility(View.VISIBLE);
+                    loadingView.setVisibility(View.VISIBLE);
+                    URL url = null;
+                    try {
+                        url = new URL(picUrl);
+                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                        InputStream inputStream = conn.getInputStream();
+                        bitmap = BitmapFactory.decodeStream(inputStream);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    ivPic.post(new Runnable() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Event event = new Event();
-                            event.update(objectId, new UpdateListener() {
-                                @Override
-                                public void done(BmobException e) {
-                                    if (e == null) {
-                                        ViewUtils.show(DetailCommitActivity.this, "应用成功");
-                                        setResult(RESULT_OK);
-                                        finish();
-                                    } else {
-                                        ViewUtils.show(DetailCommitActivity.this, "应用失败 " + e.getErrorCode());
-                                    }
-                                }
-                            });
+                        public void run() {
+                            ivPic.setImageBitmap(bitmap);
+                            loadingView.setVisibility(View.GONE);
                         }
                     });
-                    builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    });
-                    builder.show();
-                    break;
+                }
+            }.start();
+        }
 
-                case R.id.btn_refuse:
-                    AlertDialog.Builder builderR = new AlertDialog.Builder(DetailCommitActivity.this);
-                    builderR.setTitle("确定应用");
-                    builderR.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Event event = new Event();
-                            event.update(objectId, new UpdateListener() {
-                                @Override
-                                public void done(BmobException e) {
-                                    if (e == null) {
-                                        ViewUtils.show(DetailCommitActivity.this, "拒绝成功");
-                                        setResult(RESULT_OK);
-                                        finish();
-                                    } else {
-                                        ViewUtils.show(DetailCommitActivity.this, "拒绝失败 " + e.getErrorCode());
-                                    }
-                                }
-                            });
-                        }
-                    });
-                    builderR.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    });
-                    builderR.show();
-                    break;
-            }
-
+        voiceUrl = bundle.getString("voice");
+        if (voiceUrl != null) {
+            ivVoice.setVisibility(View.VISIBLE);
         }
     }
 }

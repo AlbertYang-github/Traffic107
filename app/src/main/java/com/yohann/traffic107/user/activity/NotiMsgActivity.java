@@ -1,15 +1,18 @@
 package com.yohann.traffic107.user.activity;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,18 +25,29 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.Constants.Variable;
 import com.yohann.traffic107.common.activity.BaseActivity;
+import com.yohann.traffic107.common.bean.UserEvent;
 import com.yohann.traffic107.utils.APPPath;
 import com.yohann.traffic107.utils.BmobUtils;
 import com.yohann.traffic107.utils.MediaPlayerManger;
 import com.yohann.traffic107.utils.RecordManager;
+import com.yohann.traffic107.utils.UploadingView;
+import com.yohann.traffic107.utils.ViewUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
+import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
+import cn.bmob.v3.listener.UploadBatchListener;
 
 public class NotiMsgActivity extends BaseActivity implements View.OnClickListener {
 
+    private static final String TAG = "NotiMsgActivityInfo";
     private TextView tvTime;
     private EditText etLoc;
     private String address;
@@ -52,6 +66,22 @@ public class NotiMsgActivity extends BaseActivity implements View.OnClickListene
     private TextView tvVoice;
     private ImageView ivVoice;
     private MediaPlayerManger mediaPlayerManger;
+    private Button btnFinish;
+    private String pictureOutputPath;
+    private File pictureOutputFile;
+    private String picUrl;
+    private String picRmUrl;
+    private String voiceUrl;
+    private String voiceRmUrl;
+    private String time;
+    private UploadingView uploadingView;
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            uploadingView.close();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +96,7 @@ public class NotiMsgActivity extends BaseActivity implements View.OnClickListene
         geocodeSearch = new GeocodeSearch(this);
         geocodeSearch.setOnGeocodeSearchListener(new AddressListener());
         tvTime = (TextView) findViewById(R.id.tv_time);
-        String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()));
+        time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()));
         tvTime.setText(time);
         etLoc = (EditText) findViewById(R.id.et_loc);
         getAddress(Variable.myLatitude, Variable.myLongitude);
@@ -79,6 +109,8 @@ public class NotiMsgActivity extends BaseActivity implements View.OnClickListene
         tvVoice = (TextView) findViewById(R.id.tv_voice);
         ivVoice = (ImageView) findViewById(R.id.iv_voice);
         ivVoice.setOnClickListener(this);
+        btnFinish = (Button) findViewById(R.id.btn_finish);
+        btnFinish.setOnClickListener(this);
 
         recordAnimOpen = AnimationUtils.loadAnimation(this, R.anim.record_rotate_open);
         recordAnimClose = AnimationUtils.loadAnimation(this, R.anim.record_rotate_close);
@@ -124,8 +156,21 @@ public class NotiMsgActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_add_pic:
-                Intent intent = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                pictureOutputPath = roadMediaOutDir + File.separator + System.currentTimeMillis() + ".jpg";
+                pictureOutputFile = new File(pictureOutputPath);
+
+                try {
+                    if (pictureOutputFile.exists()) {
+                        pictureOutputFile.delete();
+                    }
+                    pictureOutputFile.createNewFile();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(pictureOutputFile));
                 startActivityForResult(intent, 1);
                 break;
 
@@ -164,16 +209,88 @@ public class NotiMsgActivity extends BaseActivity implements View.OnClickListene
                 if (!recordOutputFile.exists()) {
                     return;
                 }
-
                 if (mediaPlayerManger == null) {
                     mediaPlayerManger = new MediaPlayerManger();
                 }
-
                 try {
                     mediaPlayerManger.startPlay(recordOutputPath);
                 } catch (IOException e) {
                     throw new RuntimeException("该录音不存在！");
                 }
+                break;
+
+            case R.id.btn_finish:
+                uploadingView = new UploadingView(NotiMsgActivity.this);
+                uploadingView.open();
+                final UserEvent userEvent = new UserEvent();
+                userEvent.setLocation(address);
+                userEvent.setLatitude(Variable.myLatitude);
+                userEvent.setLongitude(Variable.myLongitude);
+                userEvent.setTime(new Date(System.currentTimeMillis()));
+                userEvent.setUsername(Variable.userName);
+                new Thread() {
+                    @Override
+                    public void run() {
+                        //上传文本信息
+                        userEvent.save(new SaveListener<String>() {
+                            @Override
+                            public void done(String s, BmobException e) {
+                                if (e == null) {
+                                    Variable.objectId = userEvent.getObjectId();
+                                    Log.i(TAG, "done: 基本信息上传完成");
+                                }
+                            }
+                        });
+
+                        //批量上传文件
+                        final String[] filePaths = new String[2];
+                        filePaths[0] = pictureOutputPath;
+                        filePaths[1] = recordOutputPath;
+                        Log.i(TAG, "run: picPath = " + pictureOutputPath + "  voicePath = " + recordOutputPath);
+                        BmobFile.uploadBatch(filePaths, new UploadBatchListener() {
+                            @Override
+                            public void onSuccess(List<BmobFile> list, List<String> list1) {
+                                if (list.size() == filePaths.length) {
+                                    Log.i(TAG, "onSuccess: 文件上传完成");
+                                    Log.i(TAG, "onSuccess: " + list.get(0).getFileUrl());
+                                    Log.i(TAG, "onSuccess: " + list.get(0).getUrl());
+                                    Log.i(TAG, "onSuccess: " + list.get(1).getFileUrl());
+                                    Log.i(TAG, "onSuccess: " + list.get(1).getUrl());
+
+                                    //添加Url
+                                    UserEvent userEventUrl = new UserEvent();
+                                    userEventUrl.setPicUrl(list.get(0).getFileUrl());
+                                    userEventUrl.setPicRmUrl(list.get(0).getUrl());
+                                    userEventUrl.setVoiceUrl(list.get(1).getFileUrl());
+                                    userEventUrl.setVoiceRmUrl(list.get(1).getUrl());
+                                    Log.i(TAG, "run: Variable.objectId = " + Variable.objectId);
+                                    userEventUrl.update(Variable.objectId, new UpdateListener() {
+                                        @Override
+                                        public void done(BmobException e) {
+                                            if (e == null) {
+                                                Log.i(TAG, "done: Url添加完成");
+                                                handler.sendEmptyMessage(0);
+                                                ViewUtils.show(NotiMsgActivity.this, "上传成功");
+                                                setResult(RESULT_OK);
+                                                finish();
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void onProgress(int i, int i1, int i2, int i3) {
+
+                            }
+
+                            @Override
+                            public void onError(int i, String s) {
+
+                            }
+                        });
+                    }
+                }.start();
                 break;
         }
     }
@@ -193,17 +310,17 @@ public class NotiMsgActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (requestCode == 1 && resultCode == RESULT_OK) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumns = {MediaStore.Images.Media.DATA};
-            Cursor c = getContentResolver().query(selectedImage, filePathColumns, null, null, null);
-            c.moveToFirst();
-            int columnIndex = c.getColumnIndex(filePathColumns[0]);
-            String imagePath = c.getString(columnIndex);
-            bitmap = BitmapFactory.decodeFile(imagePath);
+            bitmap = BitmapFactory.decodeFile(pictureOutputPath);
             ivPic.setVisibility(View.VISIBLE);
             ivPic.setImageBitmap(bitmap);
-            c.close();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        bitmap = null;
     }
 }

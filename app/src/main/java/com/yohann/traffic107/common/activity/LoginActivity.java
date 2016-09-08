@@ -131,16 +131,21 @@ public class LoginActivity extends BaseActivity {
                                 } else {
                                     ViewUtils.show(LoginActivity.this, "登录失败");
                                 }
+                                pb_user.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        pb_user.setVisibility(View.INVISIBLE);
+                                    }
+                                });
                             } else {
                                 ViewUtils.show(LoginActivity.this, "异常 " + e.getErrorCode());
+                                pb_user.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        pb_user.setVisibility(View.INVISIBLE);
+                                    }
+                                });
                             }
-                        }
-                    });
-
-                    pb_user.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            pb_user.setVisibility(View.INVISIBLE);
                         }
                     });
                 }
@@ -190,16 +195,21 @@ public class LoginActivity extends BaseActivity {
                                 } else {
                                     ViewUtils.show(LoginActivity.this, "登录失败");
                                 }
+                                pb_root.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        pb_root.setVisibility(View.INVISIBLE);
+                                    }
+                                });
                             } else {
                                 ViewUtils.show(LoginActivity.this, "异常 " + e.getErrorCode());
+                                pb_root.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        pb_root.setVisibility(View.INVISIBLE);
+                                    }
+                                });
                             }
-                        }
-                    });
-
-                    pb_root.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            pb_root.setVisibility(View.INVISIBLE);
                         }
                     });
                 }

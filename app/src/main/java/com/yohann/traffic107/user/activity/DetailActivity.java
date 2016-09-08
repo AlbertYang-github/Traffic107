@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mingle.widget.LoadingView;
 import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.activity.BaseActivity;
 import com.yohann.traffic107.utils.StringUtils;
@@ -30,6 +31,7 @@ public class DetailActivity extends BaseActivity {
     private ImageView ivPic;
     private String picUrl;
     private Bitmap bitmap;
+    private LoadingView loadingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,7 @@ public class DetailActivity extends BaseActivity {
         tvTitle = (TextView) findViewById(R.id.tv_title_user);
         tvDesc = (TextView) findViewById(R.id.tv_desc_user);
         ivPic = (ImageView) findViewById(R.id.iv_pic);
+        loadingView = (LoadingView) findViewById(R.id.loadingView);
     }
 
     private void loadData() {
@@ -64,6 +67,7 @@ public class DetailActivity extends BaseActivity {
                 @Override
                 public void run() {
                     ivPic.setVisibility(View.VISIBLE);
+                    loadingView.setVisibility(View.VISIBLE);
                     URL url = null;
                     try {
                         url = new URL(picUrl);
@@ -79,6 +83,7 @@ public class DetailActivity extends BaseActivity {
                         @Override
                         public void run() {
                             ivPic.setImageBitmap(bitmap);
+                            loadingView.setVisibility(View.GONE);
                         }
                     });
                 }

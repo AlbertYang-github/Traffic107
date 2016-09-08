@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.Constants.Variable;
 import com.yohann.traffic107.common.activity.BaseActivity;
-import com.yohann.traffic107.common.bean.Event;
+import com.yohann.traffic107.common.bean.UserEvent;
 import com.yohann.traffic107.utils.ViewUtils;
 
 import java.text.SimpleDateFormat;
@@ -31,7 +31,7 @@ public class PersonalActivity extends BaseActivity {
     private static final int SHOW = 1;
 
     private ListView lvCommitData;
-    private List<Event> commitList;
+    private List<UserEvent> commitList;
 
     private Handler handler = new Handler() {
         @Override
@@ -61,15 +61,14 @@ public class PersonalActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.i(TAG, "onItemClick: position = " + position);
-                Event event = commitList.get(position - 1);
+                UserEvent event = commitList.get(position - 1);
                 Intent intent = new Intent(PersonalActivity.this, PersonDetailActivity.class);
                 Bundle bundle = new Bundle();
-                String startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getStartTime());
-                bundle.putString("startTime", startTime);
+                String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getTime());
+                bundle.putString("time", time);
                 bundle.putString("loc", event.getLocation());
-                bundle.putString("labels", event.getLabels());
-                bundle.putString("title", event.getTitle());
-                bundle.putString("desc", event.getDesc());
+                bundle.putString("pic", event.getPicUrl());
+                bundle.putString("voice", event.getVoiceUrl());
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -96,15 +95,12 @@ public class PersonalActivity extends BaseActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View view = View.inflate(PersonalActivity.this, R.layout.item_commit_mine_user, null);
-
-            TextView tvTitle = (TextView) view.findViewById(R.id.tv_title_commit);
             TextView tvTime = (TextView) view.findViewById(R.id.tv_time_commit);
-            TextView tvStatus = (TextView) view.findViewById(R.id.tv_status_commit);
-
-            Event event = commitList.get(position);
-            tvTitle.setText(event.getTitle());
-            String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getStartTime());
+            TextView tvLoc = (TextView) view.findViewById(R.id.tv_loc_commit);
+            UserEvent event = commitList.get(position);
+            String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(event.getTime());
             tvTime.setText(time);
+            tvLoc.setText(event.getLocation());
             return view;
         }
     }
@@ -114,17 +110,17 @@ public class PersonalActivity extends BaseActivity {
         new Thread() {
             @Override
             public void run() {
-                BmobQuery<Event> query = new BmobQuery<>();
+                BmobQuery<UserEvent> query = new BmobQuery<>();
                 query.addWhereEqualTo("username", username);
 
-                query.findObjects(new FindListener<Event>() {
+                query.findObjects(new FindListener<UserEvent>() {
                     @Override
-                    public void done(List<Event> list, BmobException e) {
+                    public void done(List<UserEvent> list, BmobException e) {
                         if (e == null) {
                             if (list.size() == 0) {
                                 ViewUtils.show(PersonalActivity.this, "没有数据可加载");
                             } else {
-                                for (Event event : list) {
+                                for (UserEvent event : list) {
                                     commitList.add(event);
                                 }
                                 handler.sendEmptyMessage(SHOW);
