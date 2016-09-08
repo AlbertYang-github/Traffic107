@@ -8,7 +8,6 @@ import android.widget.TextView;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
-import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.services.core.LatLonPoint;
 import com.yohann.traffic107.R;
@@ -83,7 +82,7 @@ public class NetUtils {
 
             if (latitude != null && longitude != null) {
                 MarkerOptions options = new MarkerOptions();
-                initMarker(new LatLng(latitude, longitude), R.layout.marker_single_layout, options);
+                showMarker(new LatLng(latitude, longitude), R.layout.marker_layout_show, options, event.getTitle());
                 aMap.addMarker(options);
             } else {
                 new MyRouteSearch(context, aMap).planPath(
@@ -91,8 +90,8 @@ public class NetUtils {
                         new LatLonPoint(endLatitude, endLongitude), null);
                 MarkerOptions startOptions = new MarkerOptions();
                 MarkerOptions endOptions = new MarkerOptions();
-                initMarker(new LatLng(startLatitude, startLongitude), R.layout.marker_start_layout, startOptions);
-                initMarker(new LatLng(endLatitude, endLongitude), R.layout.marker_end_layout, endOptions);
+                showMarker(new LatLng(startLatitude, startLongitude), R.layout.marker_layout_show, startOptions, event.getTitle());
+                showMarker(new LatLng(endLatitude, endLongitude), R.layout.marker_layout_show, endOptions, event.getTitle());
                 aMap.addMarker(startOptions);
                 aMap.addMarker(endOptions);
             }
@@ -100,7 +99,7 @@ public class NetUtils {
     }
 
     /**
-     * marker窗口
+     * 添加时显示的marker
      *
      * @param latLng
      * @param markerOptions
@@ -113,6 +112,20 @@ public class NetUtils {
         tvLongitude.setText("经度：" + latLng.longitude);
         tvLatitude.setText("纬度：" + latLng.latitude);
 
+        markerOptions.position(latLng).icon(BitmapDescriptorFactory.fromView(view)).anchor(0, 1).visible(true);
+    }
+
+    /**
+     * 显示的marker
+     *
+     * @param latLng
+     * @param layout
+     * @param markerOptions
+     */
+    public void showMarker(LatLng latLng, int layout, MarkerOptions markerOptions, String title) {
+        View view = View.inflate(context, layout, null);
+        TextView tvTitle = (TextView) view.findViewById(R.id.tv_title_marker);
+        tvTitle.setText(title);
         markerOptions.position(latLng).icon(BitmapDescriptorFactory.fromView(view)).anchor(0, 1).visible(true);
     }
 

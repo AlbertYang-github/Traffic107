@@ -475,6 +475,7 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
         switch (requestCode) {
             case Constants.EDIT:
                 if (resultCode == RESULT_OK) {
+                    aMap.clear();
                     netUtils.loadMarker();
                 }
                 break;
@@ -489,6 +490,7 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
 
             case Constants.D_EDIT:
                 if (resultCode == RESULT_OK) {
+                    aMap.clear();
                     netUtils.loadMarker();
                 }
         }
