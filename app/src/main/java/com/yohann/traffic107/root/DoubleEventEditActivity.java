@@ -247,7 +247,6 @@ public class DoubleEventEditActivity extends BaseActivity {
                     event.setTitle(etTitle.getText().toString());
                     event.setDesc(etDesc.getText().toString());
                     event.setStartTime(startDate);
-                    event.setFinished(false);
 
                     //上传
                     new Thread() {
@@ -280,6 +279,7 @@ public class DoubleEventEditActivity extends BaseActivity {
                                         Event eventUrl = new Event();
                                         eventUrl.setFileUrl(fileUrl);
                                         eventUrl.setRmUrl(rmUrl);
+                                        eventUrl.setFinished(false);
                                         Log.i(TAG, "run: Variable.objectId = " + Variable.objectId);
                                         eventUrl.update(Variable.objectId, new UpdateListener() {
                                             @Override

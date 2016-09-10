@@ -36,6 +36,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!-- 通知震动 -->
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:allowBackup="true"

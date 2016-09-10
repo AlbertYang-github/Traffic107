@@ -42,6 +42,14 @@
     </RelativeLayout>
 
     <ImageView
+        android:id="@+id/iv_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+        android:layout_margin="30dp"
+        android:src="@mipmap/phone" />
+
+    <ImageView
         android:id="@+id/iv_notification"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

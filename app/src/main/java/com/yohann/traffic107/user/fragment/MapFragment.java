@@ -2,10 +2,9 @@ package com.yohann.traffic107.user.fragment;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +56,7 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
     private boolean status = true;
     private ImageView ivNotification;
     private Animation notiMsgAnim;
+    private ImageView ivPhone;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,6 +109,7 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
         ivMenu = (ImageView) view.findViewById(R.id.iv_menu_home);
         mapView = (MapView) view.findViewById(R.id.map_home);
         ivFlush = (ImageView) view.findViewById(R.id.iv_flush_user);
+        ivPhone = (ImageView) view.findViewById(R.id.iv_phone);
         aMap = mapView.getMap();
         netUtils = new NetUtils(activity, aMap);
         locationInit = new LocationInit(activity, aMap);
@@ -134,6 +135,17 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
             }
         });
 
+        //拨打电话
+        ivPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ivPhone.startAnimation(notiMsgAnim);
+                String phoneNumber = "0351-5678107";
+                Intent intentPhone = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber));
+                startActivity(intentPhone);
+            }
+        });
+
         //启动一个线程轮询 （Event数据库的数）
         new Thread() {
             @Override
@@ -141,10 +153,6 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
 
                 BmobQuery<Event> query = new BmobQuery<>();
                 query.addWhereEqualTo("isFinished", false);
-                List<BmobQuery<Event>> list = new ArrayList<>();
-                list.add(new BmobQuery<Event>().addWhereEqualTo("commStatus", "审核成功"));
-                query.and(list);
-
                 while (status) {
                     query.findObjects(new FindListener<Event>() {
                         @Override
@@ -153,14 +161,9 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
                                 if (list.size() == 0) {
                                 } else {
                                     if (Variable.eventMap.size() != list.size()) {
-                                        //清理原来的数据
-                                        Variable.eventMap.clear();
-                                        for (Event event : list) {
-                                            Variable.eventMap.put(event.getObjectId(), event);
-                                        }
                                         ViewUtils.show(activity, "数据有更新");
                                         aMap.clear();
-                                        netUtils.drawPath();
+                                        netUtils.loadMarker();
                                     }
                                 }
                             } else {
