@@ -57,4 +57,13 @@
         android:layout_margin="30dp"
         android:src="@mipmap/notification" />
 
+    <ImageView
+        android:id="@+id/iv_navi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="80dp"
+        android:src="@mipmap/navi" />
+
 </FrameLayout>

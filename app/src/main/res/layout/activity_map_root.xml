@@ -47,14 +47,13 @@
             android:id="@+id/rg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="80dp"
+            android:layout_marginLeft="60dp"
             android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/rbtn_start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingRight="50dp"
                 android:text="起始点"
                 android:textColor="#fff" />
 
@@ -62,9 +61,17 @@
                 android:id="@+id/rbtn_end"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:text="终止点"
                 android:textColor="#fff" />
 
+            <RadioButton
+                android:id="@+id/rbtn_area"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="躲避区域"
+                android:textColor="#fff" />
         </RadioGroup>
 
         <ImageView
@@ -92,7 +99,7 @@
         android:id="@+id/rl_btn_single"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="#d60f0c"
+        android:background="#0e976a"
         android:gravity="center_vertical"
         android:visibility="invisible">
 
@@ -118,11 +125,21 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="6dp"
             android:text="添加一个位置"
-            android:textSize="16sp"
             android:textColor="#fff"
-            android:layout_centerHorizontal="true"/>
+            android:textSize="16sp" />
+
+        <CheckBox
+            android:id="@+id/cb_area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="80dp"
+            android:checked="false"
+            android:text="躲避区段"
+            android:textColor="#fff" />
 
     </RelativeLayout>
 

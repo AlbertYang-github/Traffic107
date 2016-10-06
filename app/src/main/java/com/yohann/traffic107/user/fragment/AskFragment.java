@@ -20,6 +20,7 @@ import com.yohann.traffic107.common.bean.Message;
 import com.yohann.traffic107.user.activity.HomeActivity;
 import com.yohann.traffic107.user.adatper.ChatMsgViewAdapter;
 import com.yohann.traffic107.utils.BmobUtils;
+import com.yohann.traffic107.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,7 @@ public class AskFragment extends Fragment implements View.OnClickListener {
     private List<ChatMsgEntity> dataList = new ArrayList<>();
     private boolean status = true;
     private Message message;
+    private long sendTime;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -145,7 +147,12 @@ public class AskFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_send:// 发送按钮点击事件
-                send();
+                if ((System.currentTimeMillis() - sendTime) >= 30000) {
+                    sendTime = System.currentTimeMillis();
+                    send();
+                    break;
+                }
+                ViewUtils.show(activity, "发送消息过于频繁，请稍后再试");
                 break;
         }
     }

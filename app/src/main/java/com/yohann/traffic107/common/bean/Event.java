@@ -1,11 +1,9 @@
 package com.yohann.traffic107.common.bean;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.Date;
 
 import cn.bmob.v3.BmobObject;
-import cn.bmob.v3.datatype.BmobFile;
 
 /**
  * Created by Yohann on 2016/8/25.
@@ -29,6 +27,79 @@ public class Event extends BmobObject implements Serializable {
     private Boolean isFinished;
     private String fileUrl;
     private String rmUrl;
+
+    private Double latitude1;
+    private Double longitude1;
+    private Double latitude2;
+    private Double longitude2;
+    private Double latitude3;
+    private Double longitude3;
+    private Double latitude4;
+    private Double longitude4;
+
+    public Double getLatitude1() {
+        return latitude1;
+    }
+
+    public void setLatitude1(Double latitude1) {
+        this.latitude1 = latitude1;
+    }
+
+    public Double getLongitude1() {
+        return longitude1;
+    }
+
+    public void setLongitude1(Double longitude1) {
+        this.longitude1 = longitude1;
+    }
+
+    public Double getLatitude2() {
+        return latitude2;
+    }
+
+    public void setLatitude2(Double latitude2) {
+        this.latitude2 = latitude2;
+    }
+
+    public Double getLongitude2() {
+        return longitude2;
+    }
+
+    public void setLongitude2(Double longitude2) {
+        this.longitude2 = longitude2;
+    }
+
+    public Double getLatitude3() {
+        return latitude3;
+    }
+
+    public void setLatitude3(Double latitude3) {
+        this.latitude3 = latitude3;
+    }
+
+    public Double getLongitude3() {
+        return longitude3;
+    }
+
+    public void setLongitude3(Double longitude3) {
+        this.longitude3 = longitude3;
+    }
+
+    public Double getLatitude4() {
+        return latitude4;
+    }
+
+    public void setLatitude4(Double latitude4) {
+        this.latitude4 = latitude4;
+    }
+
+    public Double getLongitude4() {
+        return longitude4;
+    }
+
+    public void setLongitude4(Double longitude4) {
+        this.longitude4 = longitude4;
+    }
 
     public String getFileUrl() {
         return fileUrl;

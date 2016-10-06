@@ -2,9 +2,11 @@ package com.yohann.traffic107.user.fragment;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,16 +20,19 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
+import com.amap.api.services.core.LatLonPoint;
 import com.yohann.traffic107.R;
 import com.yohann.traffic107.common.Constants.Constants;
 import com.yohann.traffic107.common.Constants.Variable;
 import com.yohann.traffic107.common.bean.Event;
+import com.yohann.traffic107.user.activity.DestActivity;
 import com.yohann.traffic107.user.activity.DetailActivity;
 import com.yohann.traffic107.user.activity.HomeActivity;
 import com.yohann.traffic107.user.activity.NotiMsgActivity;
 import com.yohann.traffic107.utils.BmobUtils;
 import com.yohann.traffic107.utils.LocUtils;
 import com.yohann.traffic107.utils.LocationInit;
+import com.yohann.traffic107.utils.NavService;
 import com.yohann.traffic107.utils.NetUtils;
 import com.yohann.traffic107.utils.ViewUtils;
 
@@ -57,6 +62,9 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
     private ImageView ivNotification;
     private Animation notiMsgAnim;
     private ImageView ivPhone;
+    private ImageView ivNavi;
+    private LatLonPoint startLatLonPoint;
+    private LatLonPoint endLatLonPoint;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -110,6 +118,7 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
         mapView = (MapView) view.findViewById(R.id.map_home);
         ivFlush = (ImageView) view.findViewById(R.id.iv_flush_user);
         ivPhone = (ImageView) view.findViewById(R.id.iv_phone);
+        ivNavi = (ImageView) view.findViewById(R.id.iv_navi);
         aMap = mapView.getMap();
         netUtils = new NetUtils(activity, aMap);
         locationInit = new LocationInit(activity, aMap);
@@ -120,6 +129,7 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
         new LocUtils(activity, aMap).getLoc();
         notiMsgAnim = AnimationUtils.loadAnimation(activity, R.anim.plus_zoom_in);
 
+        //向107端提交信息
         ivNotification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,10 +138,20 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
             }
         });
 
+        //刷新
         ivFlush.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 netUtils.loadMarker();
+            }
+        });
+
+        //导航
+        ivNavi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //跳转到选择目的地Activity
+                startActivityForResult(new Intent(activity, DestActivity.class), 1);
             }
         });
 
@@ -255,5 +275,48 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
     public void onDestroyView() {
         super.onDestroyView();
         status = false;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1 && resultCode == activity.RESULT_OK) {
+
+            Bundle latLonPoint = data.getExtras();
+            startLatLonPoint = (LatLonPoint) latLonPoint.get("startLatLonPoint");
+            endLatLonPoint = (LatLonPoint) latLonPoint.get("endLatLonPoint");
+
+            Log.i(TAG, "startLat=" + startLatLonPoint.getLatitude() + ", startLon=" + startLatLonPoint.getLongitude());
+            Log.i(TAG, "endLat=" + endLatLonPoint.getLatitude() + ", endLon=" + endLatLonPoint.getLongitude());
+
+            //服务器查询躲避区域
+            new Thread() {
+                @Override
+                public void run() {
+                    BmobQuery<Event> query = new BmobQuery<>();
+                    query.addWhereEqualTo("isFinished", false);
+                    query.findObjects(new FindListener<Event>() {
+                        @Override
+                        public void done(List<Event> list, BmobException e) {
+                            //创建导航避让区域
+                            List<List<LatLonPoint>> avoidAreas = new ArrayList<>();
+
+                            for (Event event : list) {
+                                List<LatLonPoint> area = new ArrayList<>();
+                                area.add(new LatLonPoint(event.getLatitude1(), event.getLongitude1()));
+                                area.add(new LatLonPoint(event.getLatitude2(), event.getLongitude2()));
+                                area.add(new LatLonPoint(event.getLatitude3(), event.getLongitude3()));
+                                area.add(new LatLonPoint(event.getLatitude4(), event.getLongitude4()));
+
+                                avoidAreas.add(area);
+                            }
+
+                            //创建NaviService对象
+                            NavService navService = new NavService(activity, aMap, new NavService.OverLay(10, Color.RED));
+                            navService.driveRoutePlan(startLatLonPoint, endLatLonPoint, navService.MODE_DEFAULT, avoidAreas);
+                        }
+                    });
+                }
+            }.start();
+        }
     }
 }

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
@@ -71,6 +72,7 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
 
     ArrayList<Marker> markerStartList = new ArrayList<>();
     ArrayList<Marker> markerEndList = new ArrayList<>();
+    ArrayList<Marker> markerArea = new ArrayList<>();
     private Marker marker;
     private Marker startMarker;
     private Marker endMarker;
@@ -86,6 +88,17 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
     private Animation animEditSingleClose;
     private String editflag;
     private boolean isDouble;
+    private CheckBox cbArea;
+    private RadioButton rbtnArea;
+
+    private Double latitude1;
+    private Double longitude1;
+    private Double latitude2;
+    private Double longitude2;
+    private Double latitude3;
+    private Double longitude3;
+    private Double latitude4;
+    private Double longitude4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +155,8 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
         ivBackDouble = (ImageView) findViewById(R.id.iv_back_add_double);
         rlBtnSingle = (RelativeLayout) findViewById(R.id.rl_btn_single);
         rlBtnDouble = (RelativeLayout) findViewById(R.id.rl_btn_double);
+        cbArea = (CheckBox) findViewById(R.id.cb_area);
+        rbtnArea = (RadioButton) findViewById(R.id.rbtn_area);
 
         aMap = mapView.getMap();
         animOpen = AnimationUtils.loadAnimation(this, R.anim.plus_open_anim);
@@ -239,6 +254,58 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
                         netUtils.initMarker(latLng, R.layout.marker_single_layout, markerOptions);
                         marker = aMap.addMarker(markerOptions);
                     }
+                }
+            }
+        });
+
+        //点击地图添加导航时的避让区域的矩形的四个顶点
+        aMap.setOnMapClickListener(new AMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                if (cbArea.isChecked() || rbtnArea.isChecked()) {
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    Marker marker = null;
+                    switch (markerArea.size()) {
+                        case 0:
+                            markerOptions.position(latLng);
+                            marker = aMap.addMarker(markerOptions);
+                            markerArea.add(marker);
+                            latitude1 = latLng.latitude;
+                            longitude1 = latLng.longitude;
+                            break;
+
+                        case 1:
+                            markerOptions.position(latLng);
+                            marker = aMap.addMarker(markerOptions);
+                            markerArea.add(marker);
+                            latitude2 = latLng.latitude;
+                            longitude2 = latLng.longitude;
+                            break;
+
+                        case 2:
+                            markerOptions.position(latLng);
+                            marker = aMap.addMarker(markerOptions);
+                            markerArea.add(marker);
+                            latitude3 = latLng.latitude;
+                            longitude3 = latLng.longitude;
+                            break;
+
+                        case 3:
+                            markerOptions.position(latLng);
+                            marker = aMap.addMarker(markerOptions);
+                            markerArea.add(marker);
+                            latitude4 = latLng.latitude;
+                            longitude4 = latLng.longitude;
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    Log.i(TAG, "latitude1=" + latitude1 + "  longitude1=" + longitude1);
+                    Log.i(TAG, "latitude2=" + latitude2 + "  longitude2=" + longitude2);
+                    Log.i(TAG, "latitude3=" + latitude3 + "  longitude3=" + longitude3);
+                    Log.i(TAG, "latitude4=" + latitude4 + "  longitude4=" + longitude4);
                 }
             }
         });
@@ -437,6 +504,16 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
                         Bundle bundle = new Bundle();
                         bundle.putDouble("longitude", longitude);
                         bundle.putDouble("latitude", latitude);
+
+                        bundle.putDouble("latitude1", latitude1);
+                        bundle.putDouble("longitude1", longitude1);
+                        bundle.putDouble("latitude2", latitude2);
+                        bundle.putDouble("longitude2", longitude2);
+                        bundle.putDouble("latitude3", latitude3);
+                        bundle.putDouble("longitude3", longitude3);
+                        bundle.putDouble("latitude4", latitude4);
+                        bundle.putDouble("longitude4", longitude4);
+
                         intent.putExtras(bundle);
                         startActivityForResult(intent, Constants.D_EDIT);
                     }
@@ -455,6 +532,16 @@ public class MapActivity extends BaseActivity implements AMap.OnMarkerClickListe
                         bundle.putDouble("startLatitude", startLatitude);
                         bundle.putDouble("endLongitude", endLongitude);
                         bundle.putDouble("endLatitude", endLatitude);
+
+                        bundle.putDouble("latitude1", latitude1);
+                        bundle.putDouble("longitude1", longitude1);
+                        bundle.putDouble("latitude2", latitude2);
+                        bundle.putDouble("longitude2", longitude2);
+                        bundle.putDouble("latitude3", latitude3);
+                        bundle.putDouble("longitude3", longitude3);
+                        bundle.putDouble("latitude4", latitude4);
+                        bundle.putDouble("longitude4", longitude4);
+
                         intent.putExtras(bundle);
                         startActivityForResult(intent, Constants.EDIT);
                     }

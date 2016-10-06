@@ -77,6 +77,15 @@ public class DoubleEventEditActivity extends BaseActivity {
     private String rmUrl;
     private UploadingView uploadingView;
 
+    private Double latitude1;
+    private Double longitude1;
+    private Double latitude2;
+    private Double longitude2;
+    private Double latitude3;
+    private Double longitude3;
+    private Double latitude4;
+    private Double longitude4;
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -156,6 +165,15 @@ public class DoubleEventEditActivity extends BaseActivity {
         startLatitude = bundle.getDouble("startLatitude");
         endLongitude = bundle.getDouble("endLongitude");
         endLatitude = bundle.getDouble("endLatitude");
+
+        latitude1 = bundle.getDouble("latitude1");
+        longitude1 = bundle.getDouble("longitude1");
+        latitude2 = bundle.getDouble("latitude2");
+        longitude2 = bundle.getDouble("longitude2");
+        latitude3 = bundle.getDouble("latitude3");
+        longitude3 = bundle.getDouble("longitude3");
+        latitude4 = bundle.getDouble("latitude4");
+        longitude4 = bundle.getDouble("longitude4");
 
         Log.i(TAG, "startLongitude" + startLongitude + "startLatitude" +
                 startLatitude + "endLongitude" + endLongitude + "endLatitude" + endLatitude);
@@ -247,6 +265,15 @@ public class DoubleEventEditActivity extends BaseActivity {
                     event.setTitle(etTitle.getText().toString());
                     event.setDesc(etDesc.getText().toString());
                     event.setStartTime(startDate);
+
+                    event.setLatitude1(latitude1);
+                    event.setLongitude1(longitude1);
+                    event.setLatitude2(latitude2);
+                    event.setLongitude2(longitude2);
+                    event.setLatitude3(latitude3);
+                    event.setLongitude3(longitude3);
+                    event.setLatitude4(latitude4);
+                    event.setLongitude4(longitude4);
 
                     //上传
                     new Thread() {
