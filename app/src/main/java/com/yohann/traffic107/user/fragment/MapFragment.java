@@ -6,13 +6,13 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.amap.api.maps.AMap;
@@ -63,8 +63,9 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
     private Animation notiMsgAnim;
     private ImageView ivPhone;
     private ImageView ivNavi;
-    private LatLonPoint startLatLonPoint;
-    private LatLonPoint endLatLonPoint;
+    private LatLonPoint mStartLatLonPoint;
+    private LatLonPoint mEndLatLonPoint;
+    private Button btnCancelNavi;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -119,6 +120,7 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
         ivFlush = (ImageView) view.findViewById(R.id.iv_flush_user);
         ivPhone = (ImageView) view.findViewById(R.id.iv_phone);
         ivNavi = (ImageView) view.findViewById(R.id.iv_navi);
+        btnCancelNavi = (Button) view.findViewById(R.id.btn_cancel_navi);
         aMap = mapView.getMap();
         netUtils = new NetUtils(activity, aMap);
         locationInit = new LocationInit(activity, aMap);
@@ -155,6 +157,17 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
             }
         });
 
+        //取消导航
+        btnCancelNavi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                aMap.clear();
+                netUtils.loadMarker();
+                btnCancelNavi.setVisibility(View.INVISIBLE);
+                Variable.isNaving = false;
+            }
+        });
+
         //拨打电话
         ivPhone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,7 +179,7 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
             }
         });
 
-        //启动一个线程轮询 （Event数据库的数）
+        //启动一个线程轮询（Event数据库的数）
         new Thread() {
             @Override
             public void run() {
@@ -184,6 +197,9 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
                                         ViewUtils.show(activity, "数据有更新");
                                         aMap.clear();
                                         netUtils.loadMarker();
+                                        if (Variable.isNaving) {
+                                            startNavi();
+                                        }
                                     }
                                 }
                             } else {
@@ -281,42 +297,54 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == activity.RESULT_OK) {
 
+            //清屏，从服务器拉取数据
+            aMap.clear();
+            netUtils.loadMarker();
+
             Bundle latLonPoint = data.getExtras();
-            startLatLonPoint = (LatLonPoint) latLonPoint.get("startLatLonPoint");
-            endLatLonPoint = (LatLonPoint) latLonPoint.get("endLatLonPoint");
+            mStartLatLonPoint = (LatLonPoint) latLonPoint.get("startLatLonPoint");
+            mEndLatLonPoint = (LatLonPoint) latLonPoint.get("endLatLonPoint");
 
-            Log.i(TAG, "startLat=" + startLatLonPoint.getLatitude() + ", startLon=" + startLatLonPoint.getLongitude());
-            Log.i(TAG, "endLat=" + endLatLonPoint.getLatitude() + ", endLon=" + endLatLonPoint.getLongitude());
-
-            //服务器查询躲避区域
-            new Thread() {
-                @Override
-                public void run() {
-                    BmobQuery<Event> query = new BmobQuery<>();
-                    query.addWhereEqualTo("isFinished", false);
-                    query.findObjects(new FindListener<Event>() {
-                        @Override
-                        public void done(List<Event> list, BmobException e) {
-                            //创建导航避让区域
-                            List<List<LatLonPoint>> avoidAreas = new ArrayList<>();
-
-                            for (Event event : list) {
-                                List<LatLonPoint> area = new ArrayList<>();
-                                area.add(new LatLonPoint(event.getLatitude1(), event.getLongitude1()));
-                                area.add(new LatLonPoint(event.getLatitude2(), event.getLongitude2()));
-                                area.add(new LatLonPoint(event.getLatitude3(), event.getLongitude3()));
-                                area.add(new LatLonPoint(event.getLatitude4(), event.getLongitude4()));
-
-                                avoidAreas.add(area);
-                            }
-
-                            //创建NaviService对象
-                            NavService navService = new NavService(activity, aMap, new NavService.OverLay(10, Color.RED));
-                            navService.driveRoutePlan(startLatLonPoint, endLatLonPoint, navService.MODE_DEFAULT, avoidAreas);
-                        }
-                    });
-                }
-            }.start();
+            startNavi();
         }
+    }
+
+    /**
+     * 开始导航
+     */
+    public void startNavi() {
+        //设置已导航的标记
+        Variable.isNaving = true;
+        btnCancelNavi.setVisibility(View.VISIBLE);
+
+        //服务器查询躲避区域
+        new Thread() {
+            @Override
+            public void run() {
+                BmobQuery<Event> query = new BmobQuery<>();
+                query.addWhereEqualTo("isFinished", false);
+                query.findObjects(new FindListener<Event>() {
+                    @Override
+                    public void done(List<Event> list, BmobException e) {
+                        //创建导航避让区域
+                        List<List<LatLonPoint>> avoidAreas = new ArrayList<>();
+
+                        for (Event event : list) {
+                            List<LatLonPoint> area = new ArrayList<>();
+                            area.add(new LatLonPoint(event.getLatitude1(), event.getLongitude1()));
+                            area.add(new LatLonPoint(event.getLatitude2(), event.getLongitude2()));
+                            area.add(new LatLonPoint(event.getLatitude3(), event.getLongitude3()));
+                            area.add(new LatLonPoint(event.getLatitude4(), event.getLongitude4()));
+
+                            avoidAreas.add(area);
+                        }
+
+                        //创建NaviService对象
+                        NavService navService = new NavService(activity, aMap, new NavService.OverLay(15, Color.parseColor("#62a90b")));
+                        navService.driveRoutePlan(mStartLatLonPoint, mEndLatLonPoint, navService.MODE_DEFAULT, avoidAreas);
+                    }
+                });
+            }
+        }.start();
     }
 }

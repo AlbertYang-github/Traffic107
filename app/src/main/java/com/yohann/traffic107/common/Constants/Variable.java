@@ -21,4 +21,6 @@ public class Variable {
     public static Double myLongitude;
 
     public static Map<String, Event> eventMap = new HashMap<>();
+
+    public static boolean isNaving = false;
 }
